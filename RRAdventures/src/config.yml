@@ -1,0 +1,5 @@
+join_message: '&a<player> &7has joined the realm!'
+
+plugin_prefix: '&5RR Adventures &r&d> '
+
+leave_message: '&c<player> &7has left the realm!'

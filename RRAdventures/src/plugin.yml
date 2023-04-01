@@ -1,0 +1,11 @@
+name: RR-Adventures
+version: 1.0
+author: Geekenex
+main: me.Geekenex.rradventures.Main
+description: 
+api-version: 1.19
+
+commands:
+  nvkey:
+  nvtrans:
+  currencies:
