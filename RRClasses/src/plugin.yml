@@ -1,0 +1,18 @@
+name: RRClasses
+author: Geekenex
+main: me.Geekenex.RRClasses.Main
+version: 1.0
+api-version: 1.16
+description: Classes for RRAdventures.
+
+commands:
+  alchemist:
+  clearclass:
+  tank:
+  rogue:
+  brawler:
+  disciple:
+  levelget:
+  clearlevels:
+  class:
+  skilltokens:
