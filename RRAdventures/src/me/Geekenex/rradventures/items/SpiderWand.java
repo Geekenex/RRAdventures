@@ -40,7 +40,7 @@ public class SpiderWand implements Listener {
 		if(e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 			if(item.getType().equals(Material.NETHER_BRICK)) {
 			if(CooldownManager.checkCooldown(player)) {
-			CooldownManager.setCooldown(player,30);
+			CooldownManager.setCooldown(player,20);
 				player.sendMessage(ChatColor.GRAY + "Woosh");
 				e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.ENTITY_SPIDER_AMBIENT, 1, 1);
 				final ItemStack potion = new ItemStack(Material.LINGERING_POTION);
