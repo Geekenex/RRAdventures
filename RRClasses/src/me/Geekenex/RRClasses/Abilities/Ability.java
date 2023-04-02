@@ -12,13 +12,15 @@ public class Ability {
 	private int tier;
 	private int cooldown;
 	private int xpCost;
+	private int shopCost;
 	private ItemStack item;
 	private String description;
 	
-	public Ability(boolean classAbility, int tier, int cooldown) {
+	public Ability(boolean classAbility, int tier, int cooldown, int shopCost) {
 		this.classAbility = classAbility;
 		this.tier = tier;
 		this.cooldown = cooldown;
+		this.shopCost = shopCost;
 		
 		//Sets the xpCost to purchase this ability based on what tier it is set to
 		if(classAbility) {
@@ -67,6 +69,10 @@ public class Ability {
 	
 	public String getDescription() {
 		return description;
+	}
+
+	public int getShopCost() {
+		return shopCost;
 	}
 	
 	

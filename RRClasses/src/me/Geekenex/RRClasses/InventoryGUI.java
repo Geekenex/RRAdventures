@@ -15,6 +15,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import me.Geekenex.RRClasses.Abilities.Ability;
 import me.Geekenex.RRClasses.Abilities.AbilityList;
 
 public class InventoryGUI implements Listener {
@@ -94,6 +95,64 @@ public class InventoryGUI implements Listener {
 		}
 	}
 	
+	//Returns amount of emeralds in player's inventory
+	public int getMoney(Player player) {
+	    int money = 0;
+	    // Get the player's inventory
+	    Inventory inventory = player.getInventory();
+
+	    // Iterate through the inventory
+	    for (ItemStack item : inventory.getContents()) {
+	        // Check if the item is an emerald
+	        if (item != null && item.getType() == Material.EMERALD) {
+	        	
+	            // Add the number of emeralds in the current ItemStack to the total count
+	        	money += item.getAmount();
+	        }
+	    }
+
+	    return money;
+	}
+	
+	//Removes the given money from player's inventory
+	public void removeMoney(Player p, int amountToRemove) {
+	    Inventory inventory = p.getInventory();
+
+	    // Iterate through the inventory
+	    for (ItemStack item : inventory.getContents()) {
+	        // Check if the item is an emerald
+	        if (item != null && item.getType() == Material.EMERALD) {
+	            int itemAmount = item.getAmount();
+
+	            if (itemAmount <= amountToRemove) {
+	                // Remove the entire ItemStack if it has less or equal emeralds than the amount to remove
+	                inventory.removeItem(item);
+	                amountToRemove -= itemAmount;
+	            } else {
+	                // Remove only the required number of emeralds from the current ItemStack
+	                item.setAmount(itemAmount - amountToRemove);
+	                amountToRemove = 0;
+	            }
+	        }
+	        // Stop the loop when all the required emeralds have been removed
+	        if (amountToRemove == 0) {
+	            break;
+	        }
+	    }
+	}
+	
+	public void purchaseAbility(Player p, Ability a) {
+    		//Player has enough money
+    		if(getMoney(p) >= a.getShopCost()) {
+    			p.getInventory().addItem(a.getItem());
+    			removeMoney(p, a.getShopCost());
+    			p.playSound(p, Sound.BLOCK_NOTE_BLOCK_BELL, 1, 1);
+    		}
+    		else { //Too broke
+    			p.sendMessage(ChatColor.RED + "Not enough money!");
+    			p.playSound(p, Sound.BLOCK_CHAIN_FALL, 1, 1);
+    		}
+    	}
 	
 	
 	@EventHandler
@@ -109,7 +168,18 @@ public class InventoryGUI implements Listener {
         	if(clickedItem.isSimilar(shopGuiItem.getItem()))
         		shopGUI(p);
         }
-        if(e.getView().getTitle().equalsIgnoreCase("abilities") || e.getView().getTitle().equals("Shop"))
+        //Player interacts with the shop items
+        if(e.getView().getTitle().equalsIgnoreCase("shop")) {
+        	e.setCancelled(true);
+        	
+        	Ability fb = abilities.getAbility("fireball");
+        	if(clickedItem.isSimilar(fb.getItem())) {
+        		purchaseAbility(p, fb);
+        	}
+        }
+        
+        
+        if(e.getView().getTitle().equalsIgnoreCase("abilities"))
         	e.setCancelled(true);
         
         if (clickedItem != null && (clickedItem.isSimilar(abilitySlot1.getItem()) || clickedItem.isSimilar(abilitySlot2.getItem()) || clickedItem.isSimilar(abilitySlot3.getItem()))) 

@@ -11,6 +11,7 @@ import java.util.UUID;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.Geekenex.RRClasses.Abilities.Ability;
+import me.Geekenex.RRClasses.Abilities.AbilityList;
 
 
 public class Main extends JavaPlugin {
@@ -28,6 +29,7 @@ public class Main extends JavaPlugin {
 		new classesGUI(this);
 		new GuiUse(this);
 		new InventoryGUI(this);
+		new AbilityList(this);
 		this.getCommand("alchemist").setExecutor(new ClassCommands(this));
 		this.getCommand("clearclass").setExecutor(new ClassCommands(this));
 		this.getCommand("tank").setExecutor(new ClassCommands(this));
