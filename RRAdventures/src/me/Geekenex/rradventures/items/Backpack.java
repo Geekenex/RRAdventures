@@ -7,7 +7,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import me.Geekenex.rradventures.Main;
@@ -34,5 +37,20 @@ public class Backpack implements Listener {
 			}
 		}
 	}
+	
+    @EventHandler
+    public void onInventoryClick(InventoryClickEvent event) {
+        // Check if the clicked inventory is an Ender Chest
+        if (event.getInventory().getType() != InventoryType.ENDER_CHEST) {
+            return;
+        }
+
+        // Check if the item being clicked is light_blue_dye
+        ItemStack clickedItem = event.getCurrentItem();
+        if (clickedItem != null && clickedItem.getType() == Material.LIGHT_BLUE_DYE) {
+            // Cancel the event to prevent light_blue_dye from being placed in the Ender Chest
+            event.setCancelled(true);
+        }
+    }
 	
 }
