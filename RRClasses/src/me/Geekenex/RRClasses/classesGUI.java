@@ -26,9 +26,6 @@ public class classesGUI implements CommandExecutor {
 	
 	
 	
-	
-	
-	
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		
 		

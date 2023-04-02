@@ -76,6 +76,8 @@ public class ClassCommands implements CommandExecutor {
 					}
 				Main.classtype.remove(puid);
 				Main.classtype.put(puid, "rogue");
+				
+				
 				ItemStack rf = new ItemStack(Material.FEATHER);
 			    ItemMeta rfmeta = rf.getItemMeta();
 			    String rflore = ChatColor.DARK_GREEN + "Right-Click to dash forwards.";

@@ -10,11 +10,14 @@ import java.util.UUID;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import me.Geekenex.RRClasses.Abilities.Ability;
+
 
 public class Main extends JavaPlugin {
 
 	public static HashMap<UUID, String> classtype;
 	public static HashMap<UUID, Integer> classlevel;
+	public static HashMap<UUID, Ability> abilities;
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -24,6 +27,7 @@ public class Main extends JavaPlugin {
 		new ClassEvents(this);
 		new classesGUI(this);
 		new GuiUse(this);
+		new InventoryGUI(this);
 		this.getCommand("alchemist").setExecutor(new ClassCommands(this));
 		this.getCommand("clearclass").setExecutor(new ClassCommands(this));
 		this.getCommand("tank").setExecutor(new ClassCommands(this));
@@ -56,6 +60,11 @@ public class Main extends JavaPlugin {
 				classlevel = new HashMap<UUID, Integer>();
 		}
 			
+			abilities = (HashMap<UUID, Ability>) load(new File(getDataFolder(), "abilities.dat"));
+			
+			if(abilities == null) {
+				abilities = new HashMap<UUID, Ability>();
+		}
 		
 	}
 
@@ -63,6 +72,7 @@ public class Main extends JavaPlugin {
 	public void onDisable() {
 		save(classtype, new File(getDataFolder(), "classes.dat"));
 		save(classlevel, new File(getDataFolder(), "classlevel.dat"));
+		save(abilities, new File(getDataFolder(), "abilities.dat"));
 	}
 
 	public void save(Object o, File f) {
