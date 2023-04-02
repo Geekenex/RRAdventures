@@ -2,7 +2,7 @@ name: RRClasses
 author: Geekenex
 main: me.Geekenex.RRClasses.Main
 version: 1.0
-api-version: 1.16
+api-version: 1.19
 description: Classes for RRAdventures.
 
 commands:

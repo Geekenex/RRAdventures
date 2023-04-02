@@ -36,7 +36,7 @@ public class ClassCommands implements CommandExecutor {
 					player.removePotionEffect(effect.getType());
 				}
 				player.sendMessage(Utils.chat(plugin.getConfig().getString("plugin_prefix")) + Utils.chat("&7You are now an &5Alchemist&7!"));
-				player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 100000, effectlvl, false, false));
+				player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 999999999, effectlvl, false, false));
 				Main.classtype.remove(puid);
 				Main.classtype.put(puid, "alchemist");
 				return true;
@@ -48,12 +48,12 @@ public class ClassCommands implements CommandExecutor {
 					player.removePotionEffect(effect.getType());
 				}
 				player.sendMessage(Utils.chat(plugin.getConfig().getString("plugin_prefix")) + Utils.chat("&7You are now a &8Titan&7!"));
-				player.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, 100000, effectlvl, false, false));
+				player.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST,999999999, effectlvl, false, false));
 				if(effectlvl < 4) {
-					player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 100000, 0, false, false));
+					player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 999999999, 0, false, false));
 				}
 				if(effectlvl == 4) {
-					player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 100000, 1, false, false));
+					player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 999999999, 1, false, false));
 				}
 				Main.classtype.remove(puid);
 				Main.classtype.put(puid, "tank");
@@ -67,12 +67,12 @@ public class ClassCommands implements CommandExecutor {
 					player.removePotionEffect(effect.getType());
 				}
 				player.sendMessage(Utils.chat(plugin.getConfig().getString("plugin_prefix")) + Utils.chat("&7You are now a &aRogue&7!"));
-				player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100000, Math.round(effectlvl / 2), false, false));
+				player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 999999999, Math.round(effectlvl / 2), false, false));
 				if(effectlvl > 0) {
-				player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 100000, 0, false, false));
+				player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 999999999, 0, false, false));
 				}
 				if(effectlvl > 2) {
-					player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 100000, 1, false, false));
+					player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 999999999, 1, false, false));
 					}
 				Main.classtype.remove(puid);
 				Main.classtype.put(puid, "rogue");
@@ -96,12 +96,12 @@ public class ClassCommands implements CommandExecutor {
 					player.removePotionEffect(effect.getType());
 				}
 				player.sendMessage(Utils.chat(plugin.getConfig().getString("plugin_prefix")) + Utils.chat("&7You are now a &4Brawler&7!"));
-				player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 100000, Math.round(effectlvl / 2), false, false));
+				player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 999999999, Math.round(effectlvl / 2), false, false));
 				if(effectlvl > 0) {
-					player.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, 100000, 0, false, false));
+					player.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, 999999999, 0, false, false));
 					}
 					if(effectlvl > 2) {
-						player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 100000, 0, false, false));
+						player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 999999999, 0, false, false));
 						}
 				Main.classtype.remove(puid);
 				Main.classtype.put(puid, "brawler");
