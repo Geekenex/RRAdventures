@@ -60,39 +60,39 @@ public class ClassEvents implements Listener {
 			
 			//Checks if player's class is Alchemist
 			if(Main.classtype.get(puid).contains("alchemist")) {
-				player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 100000, effectlvl, false, false));
+				player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 999999999, effectlvl, false, false));
 			}
 			
 			//Checks if player's class is Tank
 			if(Main.classtype.get(puid).contains("tank")) {
-				player.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, 100000, effectlvl, false, false));
+				player.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, 999999999, effectlvl, false, false));
 				if(effectlvl < 4) {
-					player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 100000, 0, false, false));
+					player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 999999999, 0, false, false));
 				}
 				if(effectlvl == 4) {
-					player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 100000, 1, false, false));
+					player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 999999999, 1, false, false));
 				}
 			}
 			
 			//Checks if player's class is Rogue
 			if(Main.classtype.get(puid).contains("rogue")) {
-				player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100000, Math.round(effectlvl / 2), false, false));
+				player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 999999999, Math.round(effectlvl / 2), false, false));
 				if(effectlvl > 0 && effectlvl < 3) {
-				player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 100000, 0, false, false));
+				player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 999999999, 0, false, false));
 				}
 				if(effectlvl > 2) {
-					player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 100000, 1, false, false));
+					player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 999999999, 1, false, false));
 					}
 			}
 			
 			//Checks if player's class is Brawler
 			if(Main.classtype.get(puid).contains("brawler")) {
-			player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 100000, Math.round(effectlvl / 2), false, false));
+			player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 999999999, Math.round(effectlvl / 2), false, false));
 			if(effectlvl > 0) {
-			player.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, 100000, 0, false, false));
+			player.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, 999999999, 0, false, false));
 			}
 			if(effectlvl > 2) {
-				player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 100000, 0, false, false));
+				player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 999999999, 0, false, false));
 				}
 		   }
 		}
