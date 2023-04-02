@@ -21,6 +21,7 @@ import me.Geekenex.rradventures.events.worldinteraction.BlockPlace;
 import me.Geekenex.rradventures.events.worldinteraction.BucketUsing;
 import me.Geekenex.rradventures.events.worldinteraction.Farming;
 import me.Geekenex.rradventures.items.AllCurrencies;
+import me.Geekenex.rradventures.items.Backpack;
 import me.Geekenex.rradventures.items.CrazyPowder;
 import me.Geekenex.rradventures.items.NVShard;
 import me.Geekenex.rradventures.items.NVTransporter;
@@ -60,6 +61,7 @@ public void onEnable() {
 	new NVTransporter(this);
 	new AllCurrencies(this);
 	new Respawn(this);
+	new Backpack(this);
 	MCcooldown.setupCooldown();
 	CooldownManager.setupCooldown();
 	this.getCommand("nvkey").setExecutor(new IronKey(this));

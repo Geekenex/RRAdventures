@@ -60,8 +60,8 @@ public class SpiderWand implements Listener {
 				thrownPotion.setBounce(true);
 			
 				} else {
-					e.getPlayer().sendMessage(ChatColor.GRAY + "The Spider Staff is recharching for another " + ChatColor.WHITE + (CooldownManager.getCooldown(player)) + ChatColor.GRAY + " seconds.");
-					e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.ENTITY_SPIDER_STEP, 1, 1);
+					player.sendMessage(ChatColor.GRAY + "The Spider Staff is recharching for another " + ChatColor.WHITE + (CooldownManager.getCooldown(player)) + ChatColor.GRAY + " seconds.");
+					player.playSound(e.getPlayer().getLocation(), Sound.ENTITY_SPIDER_STEP, 1, 1);
 				}
 				}
 		}
