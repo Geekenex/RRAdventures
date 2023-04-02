@@ -30,7 +30,7 @@ public class Backpack implements Listener {
 		if(e.getAction() == null) return;
 		
 		if(e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-			if(item.getType().equals(Material.LIGHT_BLUE_DYE)) {
+			if(item != null && item.getType().equals(Material.LIGHT_BLUE_DYE)) {
 		p.openInventory(p.getEnderChest());
 		p.playSound(p.getLocation(), Sound.ITEM_ARMOR_EQUIP_LEATHER, 1, 1);
 			}
