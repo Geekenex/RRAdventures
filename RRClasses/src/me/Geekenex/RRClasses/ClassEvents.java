@@ -259,7 +259,7 @@ public class ClassEvents implements Listener {
 			}
 			
 			//Checks if player's class is Disciple
-	    	
+	    	if(Main.classtype.isEmpty()) return;
 			if(Main.classtype.get(puid).contains("disciple")) {
 				if(DiscipleCD.checkCooldown(p)) {
 					DiscipleCD.setCooldown(p,60);

@@ -1,5 +1,10 @@
 package me.Geekenex.RRClasses;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -27,6 +32,8 @@ public class InventoryGUI implements Listener {
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
 	
+	private HashMap<UUID, Ability> selectedAbilities = new HashMap<>();
+	
 	AbilityList abilities = new AbilityList();
 	
 	CustomItem shopGuiItem = new CustomItem(Material.SLIME_BALL, "Shop", ChatColor.DARK_GREEN, "Click to view the shop.", ChatColor.GREEN);
@@ -53,28 +60,34 @@ public class InventoryGUI implements Listener {
 	
 	
 	public void abilityGUI(Player p) {
-		//Creating the GUI Inventory	
-		Inventory abilityGUI = Bukkit.createInventory(p, 9, "Abilities");
 		
-		//Defining the abilities
+		int inventorySize = 18;
+		int abilityCount = 0;
 		
-		CustomItem i = new CustomItem(Material.ACACIA_BOAT, "test", ChatColor.BLUE, "boat", ChatColor.DARK_RED);
+	    // Creating the GUI Inventory with the appropriate size
+	    Inventory abilityGUI = Bukkit.createInventory(p, inventorySize, "Abilities");
+		//Loops through the ability hashmap, and adds every ability a player has to the gui
+	    Set<Ability> playerAbilities = Main.abilities.get(p.getUniqueId());
+	    if (playerAbilities != null) {
+	        for (Ability ability : playerAbilities) {
+	            ItemStack abilityItem = ability.getItem();
+	            abilityGUI.addItem(abilityItem);
+	            abilityCount++;
+	        }
+	    }
 		
 		//Glass Panes
 		ItemStack glassfiller = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
 		ItemMeta gfmeta = glassfiller.getItemMeta();
-
 		gfmeta.setDisplayName(" ");
-		
 		glassfiller.setItemMeta(gfmeta);
 
-		//Setting up GUI and putting in items
+		//Filling rest of ability slots with glass panes
+		for(int i = abilityCount; i < inventorySize; i++) {
+		abilityGUI.setItem(i, glassfiller);
+		}
+		
 		p.openInventory(abilityGUI);
-		abilityGUI.setItem(0, i.getItem());
-		abilityGUI.setItem(1, glassfiller);
-		abilityGUI.setItem(3, glassfiller);
-		abilityGUI.setItem(5, glassfiller);
-		abilityGUI.setItem(7, glassfiller);
 	}
 	
 	public void shopGUI(Player p) {
@@ -88,11 +101,16 @@ public class InventoryGUI implements Listener {
 		glassfiller.setItemMeta(gfmeta);
 
 		//Setting up GUI and putting in items
-		p.openInventory(shopGUI);
-		shopGUI.setItem(0, abilities.getAbility("fireball").getItem());
+		
+		shopGUI.setItem(0,abilities.getAbility("fireball").getShopItem());
+		shopGUI.setItem(2,abilities.getAbility("healpool").getShopItem());
+		shopGUI.setItem(4,abilities.getAbility("repulsion").getShopItem());
+		
 		for(int x = 1; x < 27; x+=2) {
 		shopGUI.setItem(x, glassfiller);
 		}
+		
+		p.openInventory(shopGUI);
 	}
 	
 	//Returns amount of emeralds in player's inventory
@@ -144,7 +162,12 @@ public class InventoryGUI implements Listener {
 	public void purchaseAbility(Player p, Ability a) {
     		//Player has enough money
     		if(getMoney(p) >= a.getShopCost()) {
-    			p.getInventory().addItem(a.getItem());
+    			Set<Ability> playerAbilities = Main.abilities.get(p.getUniqueId());
+    	        if (playerAbilities == null) {
+    	            playerAbilities = new HashSet<>();
+    	            Main.abilities.put(p.getUniqueId(), playerAbilities);
+    	        }
+    	        playerAbilities.add(a);
     			removeMoney(p, a.getShopCost());
     			p.playSound(p, Sound.BLOCK_NOTE_BLOCK_BELL, 1, 1);
     		}
@@ -154,11 +177,34 @@ public class InventoryGUI implements Listener {
     		}
     	}
 	
+	public boolean isAbilityItem(ItemStack item) {
+	    for (Ability ability : AbilityList.abilities.values()) {
+	        if (ability.getItem().isSimilar(item)) {
+	            return true;
+	        }
+	    }
+	    return false;
+	}
+	
+	public int scanForItemStack(Player p, ItemStack abilityItem) {
+	    for (int i = 0; i < 9; i++) {
+	        ItemStack item = p.getInventory().getItem(i);
+	        if (item != null && item.isSimilar(abilityItem)) {
+	            return i; //Index of item found
+	        }
+	    }
+	    return -1; //Not found
+	}
+	
 	
 	@EventHandler
 	public void playerClickAbilityGUI(InventoryClickEvent e) {
 		Player p = (Player) e.getWhoClicked();
 		ItemStack clickedItem = e.getCurrentItem();
+		
+		if(isAbilityItem(clickedItem))
+			e.setCancelled(true);
+		
         if (clickedItem != null && (clickedItem.isSimilar(shopGuiItem.getItem()) || clickedItem.isSimilar(skillTreeGuiItem.getItem()) || clickedItem.isSimilar(abilityGuiItem.getItem()))) {
         	p.playSound(p, Sound.BLOCK_AMETHYST_BLOCK_BREAK, 1, 1);
         	e.setCancelled(true);
@@ -172,15 +218,61 @@ public class InventoryGUI implements Listener {
         if(e.getView().getTitle().equalsIgnoreCase("shop")) {
         	e.setCancelled(true);
         	
+        	//SHOP ABILITIES
+        	//Fireball
         	Ability fb = abilities.getAbility("fireball");
-        	if(clickedItem.isSimilar(fb.getItem())) {
+        	if(clickedItem.isSimilar(fb.getShopItem())) {
         		purchaseAbility(p, fb);
         	}
+        	
+        	//Heal pool
+        	Ability hp = abilities.getAbility("healpool");
+        	if(clickedItem.isSimilar(hp.getShopItem())) {
+        		purchaseAbility(p, hp);
+        	}
+        	
+        	//Repulsion
+        	Ability sb = abilities.getAbility("repulsion");
+        	if(clickedItem.isSimilar(sb.getShopItem())) {
+        		purchaseAbility(p, sb);
+        	}
+        	
         }
         
-        
-        if(e.getView().getTitle().equalsIgnoreCase("abilities"))
-        	e.setCancelled(true);
+        if (e.getView().getTitle().equalsIgnoreCase("abilities")) {
+            e.setCancelled(true);
+
+            // Check if the clicked item is one of the player's abilities
+            Set<Ability> playerAbilities = Main.abilities.get(p.getUniqueId());
+            Ability clickedAbility = null;
+            if (playerAbilities != null) {
+                for (Ability ability : playerAbilities) {
+                    if (ability.getItem().isSimilar(clickedItem)) {
+                        clickedAbility = ability;
+                        break;
+                    }
+                }
+            }
+
+            if (clickedAbility != null && !selectedAbilities.containsKey(p.getUniqueId())) {
+                // Save the selected ability for the player
+                selectedAbilities.put(p.getUniqueId(), clickedAbility);
+                p.sendMessage(ChatColor.LIGHT_PURPLE + "Select an ability slot to bind this ability to!");
+                p.playSound(p, Sound.BLOCK_AMETHYST_BLOCK_STEP, 1, 1);
+            } else if (selectedAbilities.containsKey(p.getUniqueId()) && (e.getSlot() == 6 || e.getSlot() == 7 || e.getSlot() == 8)) {
+                // Bind the selected ability to the hotbar slot
+                Ability selectedAbility = selectedAbilities.get(p.getUniqueId());
+                p.getInventory().setItem(e.getSlot(), selectedAbility.getItem());
+                p.playSound(p, Sound.BLOCK_AMETHYST_BLOCK_STEP, 1, 1);
+
+                // Display the message
+                p.sendMessage(ChatColor.LIGHT_PURPLE + "Ability bound to slot number " + ChatColor.DARK_PURPLE + (e.getSlot() - 5) + ChatColor.LIGHT_PURPLE + "!");
+
+                // Remove the selected ability from the HashMap
+                selectedAbilities.remove(p.getUniqueId());
+            }
+        }
+
         
         if (clickedItem != null && (clickedItem.isSimilar(abilitySlot1.getItem()) || clickedItem.isSimilar(abilitySlot2.getItem()) || clickedItem.isSimilar(abilitySlot3.getItem()))) 
         	e.setCancelled(true);
@@ -212,6 +304,8 @@ public class InventoryGUI implements Listener {
 		if((i.isSimilar(shopGuiItem.getItem()) || i.isSimilar(skillTreeGuiItem.getItem()) || i.isSimilar(abilityGuiItem.getItem()))) {
 			e.setCancelled(true);
 		}
+		if(isAbilityItem(i))
+			e.setCancelled(true);
 	}
 	
 	

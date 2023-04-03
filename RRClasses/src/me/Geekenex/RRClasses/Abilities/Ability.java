@@ -1,19 +1,23 @@
 package me.Geekenex.RRClasses.Abilities;
 
+import java.io.Serializable;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import me.Geekenex.RRClasses.CustomItem;
 
-public class Ability {
+public class Ability implements Serializable {
 
+	private static final long serialVersionUID = 1L;
 	private boolean classAbility;
 	private int tier;
 	private int cooldown;
 	private int xpCost;
 	private int shopCost;
-	private ItemStack item;
+	private CustomItem customItem;
+	private CustomItem shopItem;
 	private String description;
 	
 	public Ability(boolean classAbility, int tier, int cooldown, int shopCost) {
@@ -43,8 +47,8 @@ public class Ability {
 	}
 	
 	public void setItem(Material material, String name, ChatColor nameColor, String lore , ChatColor loreColor) {
-		CustomItem item = new CustomItem(material, name, nameColor, lore , loreColor);
-		this.item = item.getItem();
+		customItem = new CustomItem(material, name, nameColor, lore , loreColor);
+		this.shopItem = new CustomItem(material, name, nameColor, lore , loreColor);
 	}
 
 	public boolean isClassAbility() {
@@ -64,7 +68,22 @@ public class Ability {
 	}
 
 	public ItemStack getItem() {
-		return item;
+		return customItem.getItem();
+	}
+	
+	public ItemStack getShopItem() {
+		return this.shopItem.getItem();
+	} 
+	
+	public CustomItem shopItem() {
+		return this.shopItem;
+	}
+	
+	public CustomItem item() {
+		return customItem;
+	}
+	public void addLore(String lore, ChatColor loreColor) {
+		customItem.addLore(lore, loreColor);
 	}
 	
 	public String getDescription() {

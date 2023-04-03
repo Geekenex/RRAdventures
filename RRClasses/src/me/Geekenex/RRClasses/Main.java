@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
+import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.plugin.java.JavaPlugin;
@@ -18,7 +19,7 @@ public class Main extends JavaPlugin {
 
 	public static HashMap<UUID, String> classtype;
 	public static HashMap<UUID, Integer> classlevel;
-	public static HashMap<UUID, Ability> abilities;
+	public static HashMap<UUID, Set<Ability>> abilities;
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -62,10 +63,10 @@ public class Main extends JavaPlugin {
 				classlevel = new HashMap<UUID, Integer>();
 		}
 			
-			abilities = (HashMap<UUID, Ability>) load(new File(getDataFolder(), "abilities.dat"));
+			abilities = (HashMap<UUID, Set<Ability>>) load(new File(getDataFolder(), "abilities.dat"));
 			
 			if(abilities == null) {
-				abilities = new HashMap<UUID, Ability>();
+				abilities = new HashMap<UUID, Set<Ability>>();
 		}
 		
 	}
