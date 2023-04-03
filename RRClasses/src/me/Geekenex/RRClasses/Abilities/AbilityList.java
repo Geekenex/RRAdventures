@@ -9,6 +9,7 @@ import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.entity.AreaEffectCloud;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Fireball;
@@ -71,6 +72,7 @@ public class AbilityList implements Listener {
     @EventHandler
     public void playerInteract(PlayerInteractEvent e) {
     	Player p = e.getPlayer();
+        Location playerLocation = p.getLocation();
 		ItemStack item = e.getItem();
 		if(e.getAction() == null) return;
 		
@@ -86,6 +88,8 @@ public class AbilityList implements Listener {
                 // Set the fireball velocity in the direction the player is looking
                 Vector direction = p.getLocation().getDirection().multiply(2);
                 fireball.setVelocity(direction);
+                //Sound
+	            playerLocation.getWorld().playSound(playerLocation, Sound.ENTITY_BLAZE_SHOOT, 1.0f, 1.0f);
 			}
 			
 			//Heal pool
@@ -101,21 +105,24 @@ public class AbilityList implements Listener {
 	            // Create a potion effect for healing
 	            PotionEffect healEffect = new PotionEffect(PotionEffectType.HEAL, 0, 1, true, false, true);
 	            cloud.addCustomEffect(healEffect, true); // Add the potion effect to the cloud
+	            //Sound
+	            playerLocation.getWorld().playSound(playerLocation, Sound.ENTITY_PLAYER_BREATH, 1.0f, 1.0f);
 	        }
 			
-			//Sea burst
+			//Repulsion
 			if (item != null && item.isSimilar(abilities.get("repulsion").getItem())) {
-	            Location playerLocation = p.getLocation();
-	            spawnBubbleBurst(playerLocation);
+	            spawnRepulsionParticles(playerLocation);
 
-	            double knockbackStrength = 1.5;
+	            double knockbackStrength = 2.0;
 	            applyKnockbackToNearbyMobs(playerLocation, knockbackStrength);
+	            //Sound
+	            playerLocation.getWorld().playSound(playerLocation, Sound.ENTITY_CAMEL_DASH, 1.0f, 1.0f);
 	        }
 	    }
     }
     
 
-    private void spawnBubbleBurst(Location location) {
+    private void spawnRepulsionParticles(Location location) {
         int particleCount = 300;
         Particle.DustOptions dustOptions = new Particle.DustOptions(Color.AQUA, 1);
         location.getWorld().spawnParticle(Particle.REDSTONE, location, particleCount, 1, 1, 1, 5.0, dustOptions);

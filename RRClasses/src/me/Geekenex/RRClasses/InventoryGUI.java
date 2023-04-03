@@ -1,7 +1,9 @@
 package me.Geekenex.RRClasses;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -22,6 +24,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import me.Geekenex.RRClasses.Abilities.Ability;
 import me.Geekenex.RRClasses.Abilities.AbilityList;
+import me.Geekenex.RRClasses.Classes.PlayerClass;
+import me.Geekenex.RRClasses.SkillTree.Skill;
+import me.Geekenex.RRClasses.SkillTree.SkillTree;
 
 public class InventoryGUI implements Listener {
 	
@@ -112,6 +117,43 @@ public class InventoryGUI implements Listener {
 		
 		p.openInventory(shopGUI);
 	}
+	
+
+    public void openSkillTree(Player player) {
+        PlayerClass playerClass = Main.classtype.get(player.getUniqueId());
+        
+        SkillTree playerSkillTree = Main.skilltrees.get(playerClass.getClassName());
+
+        // Create a new inventory for the skill tree GUI
+        Inventory skillTreeGui = Bukkit.createInventory(null, 54,"Skill Tree");
+
+        // Loop through the skills in the player's skill tree and create ItemStacks for them
+        for (Skill skill : playerSkillTree.getAllSkills()) {
+            ItemStack skillItem = new ItemStack(Material.PAPER);
+            ItemMeta skillMeta = skillItem.getItemMeta();
+
+            // Set the skill item's display name to the skill's name
+            skillMeta.setDisplayName(ChatColor.GREEN + skill.getName());
+
+            // Set the skill item's lore to the skill's description, required XP, and prerequisites
+            List<String> skillLore = new ArrayList<>();
+            skillLore.add(ChatColor.GRAY + skill.getDescription());
+            skillLore.add(ChatColor.GOLD + "Required XP: " + skill.getRequiredXP());
+            if (!skill.getPrerequisites().isEmpty()) {
+                skillLore.add(ChatColor.RED + "Prerequisites: " + String.join(", ", skill.getPrerequisites()));
+            }
+            skillMeta.setLore(skillLore);
+
+            skillItem.setItemMeta(skillMeta);
+
+            // Add the skill item to the skill tree GUI at the appropriate position based on its tier
+            skillTreeGui.setItem(skill.getGuiSlot(), skillItem);
+        }
+
+        // Open the skill tree GUI for the player
+        player.openInventory(skillTreeGui);
+    }
+
 	
 	//Returns amount of emeralds in player's inventory
 	public int getMoney(Player player) {
@@ -213,6 +255,8 @@ public class InventoryGUI implements Listener {
         		abilityGUI(p);
         	if(clickedItem.isSimilar(shopGuiItem.getItem()))
         		shopGUI(p);
+        	if(clickedItem.isSimilar(skillTreeGuiItem.getItem()))
+        		openSkillTree(p);
         }
         //Player interacts with the shop items
         if(e.getView().getTitle().equalsIgnoreCase("shop")) {
@@ -238,6 +282,11 @@ public class InventoryGUI implements Listener {
         	}
         	
         }
+        
+        if(e.getView().getTitle().equalsIgnoreCase("skill tree")) {
+        	e.setCancelled(true);
+        }
+        
         
         if (e.getView().getTitle().equalsIgnoreCase("abilities")) {
             e.setCancelled(true);

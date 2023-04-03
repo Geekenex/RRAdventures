@@ -38,7 +38,7 @@ public class ClassCommands implements CommandExecutor {
 				player.sendMessage(Utils.chat(plugin.getConfig().getString("plugin_prefix")) + Utils.chat("&7You are now an &5Alchemist&7!"));
 				player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 999999999, effectlvl, false, false));
 				Main.classtype.remove(puid);
-				Main.classtype.put(puid, "alchemist");
+				Main.classtype.put(puid, Main.alchemist);
 				return true;
 			}
 		}
@@ -56,7 +56,7 @@ public class ClassCommands implements CommandExecutor {
 					player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 999999999, 1, false, false));
 				}
 				Main.classtype.remove(puid);
-				Main.classtype.put(puid, "tank");
+				Main.classtype.put(puid, Main.tank);
 				return true;
 			}
 		}
@@ -75,7 +75,7 @@ public class ClassCommands implements CommandExecutor {
 					player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 999999999, 1, false, false));
 					}
 				Main.classtype.remove(puid);
-				Main.classtype.put(puid, "rogue");
+				Main.classtype.put(puid, Main.rogue);
 				
 				
 				ItemStack rf = new ItemStack(Material.FEATHER);
@@ -106,7 +106,7 @@ public class ClassCommands implements CommandExecutor {
 						player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 999999999, 0, false, false));
 						}
 				Main.classtype.remove(puid);
-				Main.classtype.put(puid, "brawler");
+				Main.classtype.put(puid, Main.brawler);
 				return true;
 			}
 		}
@@ -118,7 +118,7 @@ public class ClassCommands implements CommandExecutor {
 				}
 				player.sendMessage(Utils.chat(plugin.getConfig().getString("plugin_prefix")) + Utils.chat("&7You are now a &rDisciple&7!"));
 				Main.classtype.remove(puid);
-				Main.classtype.put(puid, "disciple");
+				Main.classtype.put(puid, Main.disciple);
 				return true;
 			}
 		}

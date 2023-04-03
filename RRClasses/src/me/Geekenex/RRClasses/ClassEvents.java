@@ -59,12 +59,12 @@ public class ClassEvents implements Listener {
 		if(Main.classtype.containsKey(puid)) {
 			
 			//Checks if player's class is Alchemist
-			if(Main.classtype.get(puid).contains("alchemist")) {
+			if(Main.classtype.get(puid).equals(Main.alchemist)) {
 				player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 999999999, effectlvl, false, false));
 			}
 			
 			//Checks if player's class is Tank
-			if(Main.classtype.get(puid).contains("tank")) {
+			if(Main.classtype.get(puid).equals(Main.tank)) {
 				player.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, 999999999, effectlvl, false, false));
 				if(effectlvl < 4) {
 					player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 999999999, 0, false, false));
@@ -75,7 +75,7 @@ public class ClassEvents implements Listener {
 			}
 			
 			//Checks if player's class is Rogue
-			if(Main.classtype.get(puid).contains("rogue")) {
+			if(Main.classtype.get(puid).equals(Main.rogue)) {
 				player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 999999999, Math.round(effectlvl / 2), false, false));
 				if(effectlvl > 0 && effectlvl < 3) {
 				player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 999999999, 0, false, false));
@@ -86,7 +86,7 @@ public class ClassEvents implements Listener {
 			}
 			
 			//Checks if player's class is Brawler
-			if(Main.classtype.get(puid).contains("brawler")) {
+			if(Main.classtype.get(puid).equals(Main.brawler)) {
 			player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 999999999, Math.round(effectlvl / 2), false, false));
 			if(effectlvl > 0) {
 			player.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, 999999999, 0, false, false));
@@ -110,18 +110,18 @@ public class ClassEvents implements Listener {
 		if(Main.classtype.containsKey(puid)) {
 			
 			//Checks if player's class is Alchemist
-			if(Main.classtype.get(puid).contains("alchemist")) {
+			if(Main.classtype.get(puid).equals(Main.alchemist)) {
 				
 			}
 			
 			//Checks if player's class is Tank
-			if(Main.classtype.get(puid).contains("tank")) {
+			if(Main.classtype.get(puid).equals(Main.tank)) {
 				
 			}
 			
 			//Checks if player's class is Rogue
 			
-			if(Main.classtype.get(puid).contains("rogue")) {
+			if(Main.classtype.get(puid).equals(Main.rogue)) {
 				
 				//The Item
 				ItemStack rf = new ItemStack(Material.FEATHER);
@@ -139,11 +139,11 @@ public class ClassEvents implements Listener {
 			}
 			
 			//Checks if player's class is Brawler
-			if(Main.classtype.get(puid).contains("brawler")) {
+			if(Main.classtype.get(puid).equals(Main.brawler)) {
 				
 		   }
 			//Checks if player's class is Disciple
-			if(Main.classtype.get(puid).contains("disciple")) {
+			if(Main.classtype.get(puid).equals(Main.disciple)) {
 				
 		   }
 		}
@@ -260,7 +260,7 @@ public class ClassEvents implements Listener {
 			
 			//Checks if player's class is Disciple
 	    	if(Main.classtype.isEmpty()) return;
-			if(Main.classtype.get(puid).contains("disciple")) {
+			if(Main.classtype.get(puid).equals(Main.disciple)) {
 				if(DiscipleCD.checkCooldown(p)) {
 					DiscipleCD.setCooldown(p,60);
 				e.setCancelled(true);
@@ -286,7 +286,7 @@ public class ClassEvents implements Listener {
 	    
         if(e.getCause() == DamageCause.FALL){
         	UUID puid = p.getUniqueId();
-        	if(Main.classtype.get(puid).contains("rogue")) {
+        	if(Main.classtype.get(puid).equals(Main.rogue)) {
             e.setCancelled(true);
         	}
         }
@@ -301,7 +301,7 @@ public class ClassEvents implements Listener {
 				LivingEntity lentity = (LivingEntity) e.getEntity();
 			Player p = (Player) e.getDamager();
 			UUID puid = p.getUniqueId();
-			if(Main.classtype.get(puid).contains("alchemist")) {
+			if(Main.classtype.get(puid).equals(Main.alchemist)) {
 				int effectlvl = Main.classlevel.get(puid);
 			e.getEntity().setFireTicks(60);
 			if(effectlvl > 0) {
