@@ -1,14 +1,16 @@
 package me.Geekenex.RRClasses.SkillTree;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
 import me.Geekenex.RRClasses.Classes.PlayerClass;
 
-public class SkillTree {
+public class SkillTree implements Serializable {
 	
-    private PlayerClass playerClass;
+	private static final long serialVersionUID = 1L;
+	private PlayerClass playerClass;
     private HashMap<String, Skill> skills;
 
     public SkillTree(PlayerClass pc) {

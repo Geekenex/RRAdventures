@@ -1,9 +1,7 @@
 package me.Geekenex.RRClasses;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -119,39 +117,29 @@ public class InventoryGUI implements Listener {
 	}
 	
 
-    public void openSkillTree(Player player) {
-        PlayerClass playerClass = Main.classtype.get(player.getUniqueId());
+    public void openSkillTree(Player p) {
+        PlayerClass playerClass = Main.classtype.get(p.getUniqueId());
         
         SkillTree playerSkillTree = Main.skilltrees.get(playerClass.getClassName());
 
         // Create a new inventory for the skill tree GUI
-        Inventory skillTreeGui = Bukkit.createInventory(player, 54,"Skill Tree");
+        Inventory skillTreeGui = Bukkit.createInventory(p, 54,"Skill Tree");
 
         // Loop through the skills in the player's skill tree and create ItemStacks for them
         for (Skill skill : playerSkillTree.getAllSkills()) {
-            ItemStack skillItem = new ItemStack(Material.PAPER);
-            ItemMeta skillMeta = skillItem.getItemMeta();
-
-            // Set the skill item's display name to the skill's name
-            skillMeta.setDisplayName(ChatColor.GREEN + skill.getName());
-
-            // Set the skill item's lore to the skill's description, required XP, and prerequisites
-            List<String> skillLore = new ArrayList<>();
-            skillLore.add(ChatColor.GRAY + skill.getDescription());
-            skillLore.add(ChatColor.GOLD + "XP Level Cost: " + skill.getRequiredXP());
-            if (!skill.getPrerequisites().isEmpty()) {
-                skillLore.add(ChatColor.RED + "Prerequisites: " + String.join(", ", skill.getPrerequisites()));
-            }
-            skillMeta.setLore(skillLore);
-
-            skillItem.setItemMeta(skillMeta);
-
+        	Set<Skill> playerSkills = Main.skills.get(p.getUniqueId());
+        	if(playerSkills == null || !(playerSkills.contains(skill))) {
+        		skill.createItem(false);
+        	} else {
+        		skill.createItem(true);
+        	}
+        	
             // Add the skill item to the skill tree GUI at the appropriate position based on its tier
-            skillTreeGui.setItem(skill.getGuiSlot(), skillItem);
+            skillTreeGui.setItem(skill.getGuiSlot(), skill.getCustomItem().getItem());
         }
 
         // Open the skill tree GUI for the player
-        player.openInventory(skillTreeGui);
+        p.openInventory(skillTreeGui);
     }
 
 	
@@ -219,6 +207,26 @@ public class InventoryGUI implements Listener {
     		}
     	}
 	
+	public void purchaseSkill(Player p, Skill s) {
+		//Player has enough XP levels
+		int skillLevels = s.getRequiredXPLevel();
+		if(p.getLevel() >= skillLevels) {
+			Set<Skill> playerSkills = Main.skills.get(p.getUniqueId());
+	        if (playerSkills == null) {
+	        	playerSkills = new HashSet<>();
+	            Main.skills.put(p.getUniqueId(), playerSkills);
+	        }
+	        playerSkills.add(s);
+			p.giveExpLevels(-skillLevels);
+			p.playSound(p, Sound.BLOCK_NOTE_BLOCK_HARP, 1, 1);
+		}
+		else { //Too broke
+			p.sendMessage(p.getExp() + " a " + p.getExpToLevel());
+			p.sendMessage(ChatColor.RED + "Not enough EXP!");
+			p.playSound(p, Sound.BLOCK_NOTE_BLOCK_SNARE, 1, 1);
+		}
+	}
+	
 	public boolean isAbilityItem(ItemStack item) {
 	    for (Ability ability : AbilityList.abilities.values()) {
 	        if (ability.getItem().isSimilar(item)) {
@@ -283,8 +291,17 @@ public class InventoryGUI implements Listener {
         	
         }
         
-        if(e.getView().getTitle().equalsIgnoreCase("skill tree")) {
-        	e.setCancelled(true);
+        if (e.getView().getTitle().equalsIgnoreCase("skill tree")) {
+            e.setCancelled(true);
+            
+            // Check if the clicked item is a skill from the skill tree
+            for (Skill skill : Main.skilltrees.get(Main.classtype.get(p.getUniqueId()).getClassName()).getAllSkills()) {
+                if (skill.getCustomItem().getItem().isSimilar(clickedItem)) {
+                    // Purchase the skill
+                    purchaseSkill(p, skill);
+                    return;
+                }
+            }
         }
         
         

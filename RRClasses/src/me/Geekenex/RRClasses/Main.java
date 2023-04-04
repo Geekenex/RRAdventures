@@ -24,6 +24,7 @@ public class Main extends JavaPlugin {
 	public static HashMap<UUID, Integer> classlevel;
 	public static HashMap<UUID, Set<Ability>> abilities;
 	public static HashMap<String, SkillTree> skilltrees;
+	public static HashMap<UUID, Set<Skill>> skills;
 	
 	//Define classes
 	static PlayerClass alchemist = new PlayerClass("alchemist");
@@ -81,6 +82,12 @@ public class Main extends JavaPlugin {
 				abilities = new HashMap<UUID, Set<Ability>>();
 		}
 			
+		skills = (HashMap<UUID, Set<Skill>>) load(new File(getDataFolder(), "skills.dat"));
+			
+			if(skills == null) {
+				skills = new HashMap<UUID, Set<Skill>>();
+		}
+			
 			// Initialize the skillTrees HashMap
 		    skilltrees = new HashMap<>();
 
@@ -98,6 +105,7 @@ public class Main extends JavaPlugin {
 		save(classtype, new File(getDataFolder(), "classes.dat"));
 		save(classlevel, new File(getDataFolder(), "classlevel.dat"));
 		save(abilities, new File(getDataFolder(), "abilities.dat"));
+		save(skills, new File(getDataFolder(), "skills.dat"));
 	}
 	
 	//Alchemist Skill Tree

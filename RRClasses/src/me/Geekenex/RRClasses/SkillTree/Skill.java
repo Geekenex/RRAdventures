@@ -3,24 +3,47 @@ package me.Geekenex.RRClasses.SkillTree;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+
+import me.Geekenex.RRClasses.CustomItem;
+
 public class Skill {
 	
     private String name;
     private String description;
-    private int requiredXP;
+    private int requiredXPLevel;
     private Set<String> prerequisites;
     private int guiSlot;
-
+    private CustomItem item;
+    
     public Skill(String name, String description, int requiredXP) {
         this.name = name;
         this.description = description;
-        this.requiredXP = requiredXP;
+        this.requiredXPLevel = requiredXP;
         this.prerequisites = new HashSet<>();
+        item = new CustomItem(Material.PAPER, name, ChatColor.GREEN, description, ChatColor.GRAY);
     }
 
     // Add a prerequisite skill by its name
     public void addPrerequisite(String prerequisite) {
         prerequisites.add(prerequisite);
+        if(!prerequisites.isEmpty()) {
+        	item.addLore("XP Level Cost: " + requiredXPLevel, ChatColor.GOLD);
+            item.addLore("Prerequisites: " + String.join(", ", prerequisites), ChatColor.RED);
+    	}
+    }
+    
+    //Creates the skill item for the GUI
+    public void createItem(Boolean unlocked) {
+    	if(unlocked) {
+    		item.removeLore("XP Level Cost: " + requiredXPLevel, ChatColor.GOLD);
+    		item.removeLore("Prerequisites: " + String.join(", ", prerequisites), ChatColor.RED);
+    	}
+    }
+    
+    public CustomItem getCustomItem() {
+    	return item;
     }
 
     // Get the name of the skill
@@ -34,8 +57,8 @@ public class Skill {
     }
 
     // Get the required XP to unlock the skill
-    public int getRequiredXP() {
-        return requiredXP;
+    public int getRequiredXPLevel() {
+        return requiredXPLevel;
     }
 
     // Get the prerequisites for the skill
