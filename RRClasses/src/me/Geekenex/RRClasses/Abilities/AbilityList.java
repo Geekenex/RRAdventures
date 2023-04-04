@@ -20,6 +20,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
@@ -114,7 +115,7 @@ public class AbilityList implements Listener {
 	            spawnRepulsionParticles(playerLocation);
 
 	            double knockbackStrength = 2.0;
-	            applyKnockbackToNearbyMobs(playerLocation, knockbackStrength);
+	            applyKnockbackToNearbyMobs(playerLocation, knockbackStrength, plugin);
 	            //Sound
 	            playerLocation.getWorld().playSound(playerLocation, Sound.ENTITY_CAMEL_DASH, 1.0f, 1.0f);
 	        }
@@ -128,14 +129,25 @@ public class AbilityList implements Listener {
         location.getWorld().spawnParticle(Particle.REDSTONE, location, particleCount, 1, 1, 1, 5.0, dustOptions);
     }
 
-    private void applyKnockbackToNearbyMobs(Location location, double knockbackStrength) {
+    private void applyKnockbackToNearbyMobs(Location location, double knockbackStrength, Plugin plugin) {
         double radius = 5;
         for (Entity entity : location.getWorld().getNearbyEntities(location, radius, radius, radius)) {
-            if (entity instanceof LivingEntity && !(entity instanceof Player)) {
-                LivingEntity mob = (LivingEntity) entity;
-                Vector direction = mob.getLocation().subtract(location).toVector().normalize().multiply(knockbackStrength);
+            if (entity instanceof LivingEntity) {
+                LivingEntity livingEntity = (LivingEntity) entity;
+                Vector direction = livingEntity.getLocation().subtract(location).toVector().normalize().multiply(knockbackStrength);
                 direction.setY(Math.max(direction.getY(), 0.2));
-                mob.setVelocity(direction);
+
+                // Apply the velocity change after a short delay
+                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+                    livingEntity.setVelocity(direction);
+                    if (entity instanceof Player) {
+                        Player player = (Player) entity;
+                        int originalNoDamageTicks = player.getNoDamageTicks();
+                        player.setNoDamageTicks(0);
+                        player.setVelocity(direction);
+                        player.setNoDamageTicks(originalNoDamageTicks);
+                    }
+                }, 1L);
             }
         }
     }

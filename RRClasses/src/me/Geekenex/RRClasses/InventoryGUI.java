@@ -125,7 +125,7 @@ public class InventoryGUI implements Listener {
         SkillTree playerSkillTree = Main.skilltrees.get(playerClass.getClassName());
 
         // Create a new inventory for the skill tree GUI
-        Inventory skillTreeGui = Bukkit.createInventory(null, 54,"Skill Tree");
+        Inventory skillTreeGui = Bukkit.createInventory(player, 54,"Skill Tree");
 
         // Loop through the skills in the player's skill tree and create ItemStacks for them
         for (Skill skill : playerSkillTree.getAllSkills()) {
@@ -138,7 +138,7 @@ public class InventoryGUI implements Listener {
             // Set the skill item's lore to the skill's description, required XP, and prerequisites
             List<String> skillLore = new ArrayList<>();
             skillLore.add(ChatColor.GRAY + skill.getDescription());
-            skillLore.add(ChatColor.GOLD + "Required XP: " + skill.getRequiredXP());
+            skillLore.add(ChatColor.GOLD + "XP Level Cost: " + skill.getRequiredXP());
             if (!skill.getPrerequisites().isEmpty()) {
                 skillLore.add(ChatColor.RED + "Prerequisites: " + String.join(", ", skill.getPrerequisites()));
             }
@@ -334,12 +334,13 @@ public class InventoryGUI implements Listener {
 	        Player p = (Player) e.getInventory().getHolder();
 	        
 	        // Check if the inventory is the abilityGUI
-	        if (e.getView().getTitle().equals("Abilities") || e.getView().getTitle().equals("Shop")) {
-	            // Remove the abilityGuiItem from the cursor
-	            p.setItemOnCursor(null);
+	        if (e.getView().getTitle().equals("Abilities") || e.getView().getTitle().equals("Shop") || e.getView().getTitle().equalsIgnoreCase("Skill Tree")) {
 	            
+	        	// Remove the abilityGuiItem from the cursor
+	        	p.setItemOnCursor(null);
 	            // Update the player's inventory to remove the item visually
 	            p.updateInventory();
+	            
 	        }
 	    }
 	}
