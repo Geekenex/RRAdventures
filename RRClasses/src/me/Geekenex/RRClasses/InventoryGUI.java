@@ -216,12 +216,17 @@ public class InventoryGUI implements Listener {
 	        	playerSkills = new HashSet<>();
 	            Main.skills.put(p.getUniqueId(), playerSkills);
 	        }
+	        if(s.getPrerequisite() == null || playerSkills.contains(s.getPrerequisite())) {
 	        playerSkills.add(s);
+	        s.setUnlocked();
 			p.giveExpLevels(-skillLevels);
 			p.playSound(p, Sound.BLOCK_NOTE_BLOCK_HARP, 1, 1);
+		} else {
+			p.sendMessage(ChatColor.RED + "Prerequisite not met!");
+			p.playSound(p, Sound.BLOCK_NOTE_BLOCK_SNARE, 1, 1);
+		}
 		}
 		else { //Too broke
-			p.sendMessage(p.getExp() + " a " + p.getExpToLevel());
 			p.sendMessage(ChatColor.RED + "Not enough EXP!");
 			p.playSound(p, Sound.BLOCK_NOTE_BLOCK_SNARE, 1, 1);
 		}
@@ -299,6 +304,7 @@ public class InventoryGUI implements Listener {
                 if (skill.getCustomItem().getItem().isSimilar(clickedItem)) {
                     // Purchase the skill
                     purchaseSkill(p, skill);
+                    openSkillTree(p);
                     return;
                 }
             }

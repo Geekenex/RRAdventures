@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bukkit.entity.Player;
+
+import me.Geekenex.RRClasses.Main;
 import me.Geekenex.RRClasses.Classes.PlayerClass;
 
 public class SkillTree implements Serializable {
@@ -34,14 +37,9 @@ public class SkillTree implements Serializable {
     }
 
     // Check if the prerequisites for a skill are met
-    public boolean prerequisitesMet(String skillName, Set<String> unlockedSkills) {
-        Skill skill = skills.get(skillName);
-        if (skill == null) {
-            return false;
-        }
-
-        Set<String> prerequisites = skill.getPrerequisites();
-        return unlockedSkills.containsAll(prerequisites);
+    public boolean prerequisitesMet(Player p, Skill skill) {
+        if(Main.skills.get(p.getUniqueId()) == null) return false;
+        return Main.skills.get(p.getUniqueId()).contains(skill.getPrerequisite());
     }
 
     // Get all skills in the skill tree

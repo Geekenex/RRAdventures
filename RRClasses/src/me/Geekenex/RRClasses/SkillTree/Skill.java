@@ -1,8 +1,5 @@
 package me.Geekenex.RRClasses.SkillTree;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
@@ -13,35 +10,47 @@ public class Skill {
     private String name;
     private String description;
     private int requiredXPLevel;
-    private Set<String> prerequisites;
+    private Skill prerequisite;
     private int guiSlot;
     private CustomItem item;
+    private boolean unlocked;
     
-    public Skill(String name, String description, int requiredXP) {
+    public Skill(String name, String description, int requiredXP, int guiSlot) {
         this.name = name;
         this.description = description;
         this.requiredXPLevel = requiredXP;
-        this.prerequisites = new HashSet<>();
+        this.unlocked = false;
+        this.guiSlot = guiSlot;
         item = new CustomItem(Material.PAPER, name, ChatColor.GREEN, description, ChatColor.GRAY);
     }
 
     // Add a prerequisite skill by its name
-    public void addPrerequisite(String prerequisite) {
-        prerequisites.add(prerequisite);
-        if(!prerequisites.isEmpty()) {
-        	item.addLore("XP Level Cost: " + requiredXPLevel, ChatColor.GOLD);
-            item.addLore("Prerequisites: " + String.join(", ", prerequisites), ChatColor.RED);
-    	}
+    public void addPrerequisite(Skill prerequisite) {
+    	this.prerequisite = prerequisite;     
+        item.addLore("XP Level Unlock Cost: " + requiredXPLevel, ChatColor.GOLD);
+        item.addLore("Prerequisite: " + prerequisite.getName(), ChatColor.RED);
+    	
     }
     
     //Creates the skill item for the GUI
     public void createItem(Boolean unlocked) {
     	if(unlocked) {
-    		item.removeLore("XP Level Cost: " + requiredXPLevel, ChatColor.GOLD);
-    		item.removeLore("Prerequisites: " + String.join(", ", prerequisites), ChatColor.RED);
+    		if(prerequisite != null) {
+    		item.removeLore("XP Level Unlock Cost: " + requiredXPLevel, ChatColor.GOLD);
+    		item.removeLore("Prerequisite: " + prerequisite.getName(), ChatColor.RED);
+    		}
     	}
     }
     
+    public void setUnlocked() {
+    	if(!unlocked) {
+    	unlocked = true;
+    	item.addLore("Unlocked", ChatColor.LIGHT_PURPLE);
+    	}
+    }
+    public Boolean isUnlocked() {
+    	return unlocked;
+    }
     public CustomItem getCustomItem() {
     	return item;
     }
@@ -62,15 +71,12 @@ public class Skill {
     }
 
     // Get the prerequisites for the skill
-    public Set<String> getPrerequisites() {
-        return prerequisites;
+    public Skill getPrerequisite() {
+        return prerequisite;
     }
 
 	public int getGuiSlot() {
 		return guiSlot;
 	}
 
-	public void setGuiSlot(int guiSlot) {
-		this.guiSlot = guiSlot;
-	}
 }

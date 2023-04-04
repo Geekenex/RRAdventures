@@ -96,7 +96,7 @@ public class Main extends JavaPlugin {
 		    createTankSkillTree();
 		    createRogueSkillTree();
 		    createBrawlerSkillTree();
-		    createDiscipleSkillTree();	
+		    createDiscipleSkillTree();
 		
 	}
 
@@ -108,23 +108,51 @@ public class Main extends JavaPlugin {
 		save(skills, new File(getDataFolder(), "skills.dat"));
 	}
 	
+	//Control Variables
+	static int tier0XP = 0;
+	static int tier1XP = 10;
+	static int tier2XP = 20;
+	static int tier3XP = 30;
+	static int tier4XP = 40;
+	static int tier5XP = 50;
+	
+	static int slot0_1 = 49;
+	static int slot1_1 = 38;
+	static int slot1_2 = 39;
+	static int slot1_3 = 40;
+	static int slot1_4 = 41;
+	static int slot1_5 = 42;
+
+	
 	//Alchemist Skill Tree
 	private void createAlchemistSkillTree() {
 	    SkillTree alchemistTree = new SkillTree(alchemist);
 
 	    // Create the skills for the Alchemist class
 	    //Tier 0 skills
-	    Skill skill0_1 = new Skill("Fiery Touch", "Ignites foes when you hit them", 0);
-	    skill0_1.setGuiSlot(49);
+	    Skill skill0_1 = new Skill("Fiery Touch", "Ignites foes when you hit them", tier0XP, slot0_1);
+	    skill0_1.setUnlocked();
 	    
 	    //Tier 1 skills
-	    Skill skill1_1 = new Skill("Potion fury", "Surely drinking this is a good idea", 10);
-	    skill1_1.addPrerequisite("Fiery Touch");
-	    skill1_1.setGuiSlot(40);
+	    Skill skill1_3 = new Skill("Potion fury", "Surely drinking this is a good idea", tier1XP, slot1_3);
+	    skill1_3.addPrerequisite(skill0_1);
+	    
+		Skill skill1_2 = new Skill("Quicker Feet","+10% Movement Speed",tier1XP, slot1_2);
+		skill1_2.addPrerequisite(skill1_3);
+		Skill skill1_1 = new Skill("Heavier Hits","+2 Attack Damage",tier1XP, slot1_1);
+		skill1_1.addPrerequisite(skill1_2);
+		Skill skill1_4 = new Skill("Resilience","+1 Heart",tier1XP, slot1_4);
+		skill1_4.addPrerequisite(skill1_3);
+		Skill skill1_5 = new Skill("Skill Increase","Stronger class passive buff",tier1XP, slot1_5);
+		skill1_5.addPrerequisite(skill1_4);
 
 	    // Add the skills to the skill tree
 	    alchemistTree.addSkill(skill0_1);
 	    alchemistTree.addSkill(skill1_1);
+	    alchemistTree.addSkill(skill1_2);
+	    alchemistTree.addSkill(skill1_3);
+	    alchemistTree.addSkill(skill1_4);
+	    alchemistTree.addSkill(skill1_5);
 
 	    // Add the Alchemist skill tree to the skillTrees HashMap
 	    skilltrees.put("alchemist", alchemistTree);
@@ -136,17 +164,16 @@ public class Main extends JavaPlugin {
 
 	    // Create the skills for the Tank class
 	    //Tier 0 skills
-	    Skill skill0_1 = new Skill("Hearty", "Grants you extra health", 0);
-	    skill0_1.setGuiSlot(49);
+	    Skill skill0_1 = new Skill("Hearty", "Grants you extra health", tier0XP, slot0_1);
+	    skill0_1.setUnlocked();
 	    
 	    //Tier 1 skills
-	    Skill skill1_1 = new Skill("Hefty Bash", "Give foes a big tackle", 10);
-	    skill1_1.addPrerequisite("Hearty");
-	    skill1_1.setGuiSlot(40);
+	    Skill skill1_3 = new Skill("Hefty Bash", "Give foes a big tackle", tier1XP,slot1_3);
+	    skill1_3.addPrerequisite(skill0_1);
 
 	    // Add the skills to the skill tree
 	    tankTree.addSkill(skill0_1);
-	    tankTree.addSkill(skill1_1);
+	    tankTree.addSkill(skill1_3);
 
 	    // Add the Tank skill tree to the skillTrees HashMap
 	    skilltrees.put("tank", tankTree);
@@ -158,17 +185,16 @@ public class Main extends JavaPlugin {
 
 	    // Create the skills for the Rogue class
 	    //Tier 0 skills
-	    Skill skill0_1 = new Skill("Swift Feet", "Grants you extra speed", 0);
-	    skill0_1.setGuiSlot(49);
+	    Skill skill0_1 = new Skill("Swift Feet", "Grants you extra speed", tier0XP, slot0_1);
+	    skill0_1.setUnlocked();
 	    
 	    //Tier 1 skills
-	    Skill skill1_1 = new Skill("Quick Leap", "Launches you forwards", 10);
-	    skill1_1.addPrerequisite("Swift Feet");
-	    skill1_1.setGuiSlot(40);
+	    Skill skill1_3 = new Skill("Quick Leap", "Launches you forwards", tier1XP,slot1_3);
+	    skill1_3.addPrerequisite(skill0_1);
 
 	    // Add the skills to the skill tree
 	    rogueTree.addSkill(skill0_1);
-	    rogueTree.addSkill(skill1_1);
+	    rogueTree.addSkill(skill1_3);
 
 	    // Add the Rogue skill tree to the skillTrees HashMap
 	    skilltrees.put("rogue", rogueTree);
@@ -180,17 +206,15 @@ public class Main extends JavaPlugin {
 
 	    // Create the skills for the Brawler class
 	    //Tier 0 skills
-	    Skill skill0_1 = new Skill("Heavy Hands", "Grants you strength", 0);
-	    skill0_1.setGuiSlot(49);
+	    Skill skill0_1 = new Skill("Heavy Hands", "Grants you strength", tier0XP, slot0_1);
 	    
 	    //Tier 1 skills
-	    Skill skill1_1 = new Skill("Battle Cry", "Let out a war cry that provides courage", 10);
-	    skill1_1.addPrerequisite("Heavy Hands");
-	    skill1_1.setGuiSlot(40);
+	    Skill skill1_3 = new Skill("Battle Cry", "Let out a war cry that provides courage", tier1XP, slot1_3);
+	    skill1_3.addPrerequisite(skill0_1);
 
 	    // Add the skills to the skill tree
 	    brawlerTree.addSkill(skill0_1);
-	    brawlerTree.addSkill(skill1_1);
+	    brawlerTree.addSkill(skill1_3);
 
 	    // Add the Brawler skill tree to the skillTrees HashMap
 	    skilltrees.put("brawler", brawlerTree);
@@ -202,17 +226,15 @@ public class Main extends JavaPlugin {
 
 	    // Create the skills for the Brawler class
 	    //Tier 0 skills
-	    Skill skill0_1 = new Skill("God's Favorite", "Grants you a second life upon death", 0);
-	    skill0_1.setGuiSlot(49);
+	    Skill skill0_1 = new Skill("God's Favorite", "Grants you a second life upon death", tier0XP, slot0_1);
 	    
 	    //Tier 1 skills
-	    Skill skill1_1 = new Skill("Quick Prayer", "A small prayer for the lord you praise", 10);
-	    skill1_1.addPrerequisite("God's Favorite");
-	    skill1_1.setGuiSlot(40);
+	    Skill skill1_3 = new Skill("Quick Prayer", "A small prayer for the lord you praise", tier1XP, slot1_3);
+	    skill1_3.addPrerequisite(skill0_1);
 
 	    // Add the skills to the skill tree
 	    discipleTree.addSkill(skill0_1);
-	    discipleTree.addSkill(skill1_1);
+	    discipleTree.addSkill(skill1_3);
 
 	    // Add the Brawler skill tree to the skillTrees HashMap
 	    skilltrees.put("disciple", discipleTree);
