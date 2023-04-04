@@ -1,19 +1,26 @@
 package me.Geekenex.RRClasses.SkillTree;
 
+import java.io.Serializable;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
 import me.Geekenex.RRClasses.CustomItem;
+import me.Geekenex.RRClasses.Abilities.Ability;
 
-public class Skill {
+public class Skill implements Serializable {
 	
-    private String name;
+
+	private static final long serialVersionUID = 1L;
+	private String name;
     private String description;
     private int requiredXPLevel;
     private Skill prerequisite;
     private int guiSlot;
     private CustomItem item;
     private boolean unlocked;
+    private boolean isAbility;
+    private Ability ability;
     
     public Skill(String name, String description, int requiredXP, int guiSlot) {
         this.name = name;
@@ -78,5 +85,20 @@ public class Skill {
 	public int getGuiSlot() {
 		return guiSlot;
 	}
-
+	
+	public void setAbility(Ability a) {
+		ability = a;
+		isAbility = true;
+	}
+	
+	public Boolean isAbility() {
+		return isAbility;
+	}
+	
+	public Ability getAbility() {
+		if(isAbility)
+			return ability;
+		else
+			return null;
+	}
 }

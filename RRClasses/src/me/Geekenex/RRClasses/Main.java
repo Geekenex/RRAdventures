@@ -33,6 +33,8 @@ public class Main extends JavaPlugin {
 	static PlayerClass brawler = new PlayerClass("brawler");
 	static PlayerClass disciple = new PlayerClass("disciple");
 	
+	//Abilities
+	AbilityList abilityList = new AbilityList();
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -122,7 +124,39 @@ public class Main extends JavaPlugin {
 	static int slot1_3 = 40;
 	static int slot1_4 = 41;
 	static int slot1_5 = 42;
-
+	
+	static int slot2_1 = 28;
+	static int slot2_2 = 29;
+	static int slot2_3 = 30;
+	static int slot2_4 = 31;
+	static int slot2_5 = 32;
+	static int slot2_6 = 33;
+	static int slot2_7 = 34;
+	
+	static int slot3_1 = 19;
+	static int slot3_2 = 20;
+	static int slot3_3 = 21;
+	static int slot3_4 = 22;
+	static int slot3_5 = 23;
+	static int slot3_6 = 24;
+	static int slot3_7 = 25;
+	
+	static int slot4_1 = 9;
+	static int slot4_2 = 10;
+	static int slot4_3 = 11;
+	static int slot4_4 = 12;
+	static int slot4_5 = 13;
+	static int slot4_6 = 14;
+	static int slot4_7 = 15;
+	static int slot4_8 = 16;
+	static int slot4_9 = 17;
+	
+	static int slot5_1 = 0;
+	static int slot5_2 = 3;
+	static int slot5_3 = 4;
+	static int slot5_4 = 5;
+	static int slot5_5 = 8;
+	
 	
 	//Alchemist Skill Tree
 	private void createAlchemistSkillTree() {
@@ -131,11 +165,11 @@ public class Main extends JavaPlugin {
 	    // Create the skills for the Alchemist class
 	    //Tier 0 skills
 	    Skill skill0_1 = new Skill("Fiery Touch", "Ignites foes when you hit them", tier0XP, slot0_1);
-	    skill0_1.setUnlocked();
 	    
 	    //Tier 1 skills
-	    Skill skill1_3 = new Skill("Potion fury", "Surely drinking this is a good idea", tier1XP, slot1_3);
+	    Skill skill1_3 = new Skill("Questionable Potion", "Surely drinking this is a good idea", tier1XP, slot1_3);
 	    skill1_3.addPrerequisite(skill0_1);
+	    skill1_3.setAbility(abilityList.getAbility("questionablepotion"));
 	    
 		Skill skill1_2 = new Skill("Quicker Feet","+10% Movement Speed",tier1XP, slot1_2);
 		skill1_2.addPrerequisite(skill1_3);
@@ -146,6 +180,85 @@ public class Main extends JavaPlugin {
 		Skill skill1_5 = new Skill("Skill Increase","Stronger class passive buff",tier1XP, slot1_5);
 		skill1_5.addPrerequisite(skill1_4);
 
+		//Tier 2 skills
+		Skill skill2_4 = new Skill("Potion Knowledge", "Attacking now inflicts more effects", tier2XP, slot2_4);
+	    skill2_4.addPrerequisite(skill1_3);
+	    
+
+		Skill skill2_3 = new Skill("PlaceholderONE","XX",tier2XP, slot2_3);
+		skill2_3.addPrerequisite(skill2_4);
+		Skill skill2_5 = new Skill("PlaceholderTWO","XX",tier2XP, slot2_5);
+		skill2_5.addPrerequisite(skill2_4);
+		
+		Skill skill2_2 = new Skill("PlaceholderTHREE","XX",tier2XP, slot2_2);
+		skill2_2.addPrerequisite(skill2_3);
+		Skill skill2_6 = new Skill("PlaceholderFOUR","XX",tier2XP, slot2_6);
+		skill2_6.addPrerequisite(skill2_5);
+		
+		Skill skill2_1 = new Skill("Alchemist Offensive Ability","+10% Movement Speed",tier2XP, slot2_1);
+		skill2_1.addPrerequisite(skill2_2);
+		Skill skill2_7 = new Skill("Alchemist Defensive Ability","Stronger class passive buff",tier2XP, slot2_7);
+		skill2_7.addPrerequisite(skill2_6);
+		
+		//Tier 3 Skills
+		Skill skill3_4 = new Skill("placeholder5", "XX", tier3XP, slot3_4);
+	    skill3_4.addPrerequisite(skill2_4);
+	    
+
+		Skill skill3_3 = new Skill("Placeholder6","XX",tier3XP, slot3_3);
+		skill3_3.addPrerequisite(skill3_4);
+		Skill skill3_5 = new Skill("Placeholder7","XX",tier3XP, slot3_5);
+		skill3_5.addPrerequisite(skill3_4);
+		
+		Skill skill3_2 = new Skill("Placeholder8","XX",tier3XP, slot3_2);
+		skill3_2.addPrerequisite(skill3_3);
+		Skill skill3_6 = new Skill("Placeholder9","XX",tier3XP, slot3_6);
+		skill3_6.addPrerequisite(skill3_5);
+		
+		Skill skill3_1 = new Skill("Placeholder10","+10% Movement Speed",tier3XP, slot3_1);
+		skill3_1.addPrerequisite(skill3_2);
+		Skill skill3_7 = new Skill("Placeholder11","Stronger class passive buff",tier3XP, slot3_7);
+		skill3_7.addPrerequisite(skill3_6);
+		
+		//Tier 4 skills
+		Skill skill4_5 = new Skill("placeholder12", "XX", tier4XP, slot4_5);
+	    skill4_5.addPrerequisite(skill3_4);
+	    
+
+		Skill skill4_4 = new Skill("placeholder13", "XX", tier4XP, slot4_4);
+	    skill4_4.addPrerequisite(skill4_4);
+	    Skill skill4_6 = new Skill("placeholder14", "XX", tier4XP, slot4_6);
+	    skill4_6.addPrerequisite(skill4_6);
+	    
+		Skill skill4_3 = new Skill("placeholder15", "XX", tier4XP, slot4_3);
+	    skill4_3.addPrerequisite(skill4_4);
+	    Skill skill4_7 = new Skill("placeholder16", "XX", tier4XP, slot4_7);
+	    skill4_7.addPrerequisite(skill4_6);
+	    
+		Skill skill4_2 = new Skill("placeholder17", "XX", tier4XP, slot4_2);
+	    skill4_2.addPrerequisite(skill4_3);
+	    Skill skill4_8 = new Skill("placeholder18", "XX", tier4XP, slot4_8);
+	    skill4_8.addPrerequisite(skill4_8);
+	    
+		Skill skill4_1 = new Skill("placeholder1722", "XX", tier4XP, slot4_1);
+	    skill4_1.addPrerequisite(skill4_1);
+	    Skill skill4_9 = new Skill("placeholder1228", "XX", tier4XP, slot4_9);
+	    skill4_9.addPrerequisite(skill4_9); 
+	    
+	    //Tier 5 skills
+		Skill skill5_3 = new Skill("placeholder19", "XX", tier5XP, slot5_3);
+	    skill5_3.addPrerequisite(skill4_5);
+	    
+		Skill skill5_2 = new Skill("placeholder20", "XX", tier5XP, slot5_2);
+	    skill5_2.addPrerequisite(skill5_3);
+		Skill skill5_4 = new Skill("placeholder21", "XX", tier5XP, slot5_4);
+	    skill5_4.addPrerequisite(skill5_3);
+	    
+		Skill skill5_1 = new Skill("placeholder22", "XX", tier5XP, slot5_1);
+	    skill5_1.addPrerequisite(skill4_1);
+		Skill skill5_5 = new Skill("placeholder23", "XX", tier5XP, slot5_5);
+	    skill5_5.addPrerequisite(skill4_9);
+	    
 	    // Add the skills to the skill tree
 	    alchemistTree.addSkill(skill0_1);
 	    alchemistTree.addSkill(skill1_1);
@@ -153,6 +266,34 @@ public class Main extends JavaPlugin {
 	    alchemistTree.addSkill(skill1_3);
 	    alchemistTree.addSkill(skill1_4);
 	    alchemistTree.addSkill(skill1_5);
+	    alchemistTree.addSkill(skill2_1);
+	    alchemistTree.addSkill(skill2_2);
+	    alchemistTree.addSkill(skill2_3);
+	    alchemistTree.addSkill(skill2_4);
+	    alchemistTree.addSkill(skill2_5);
+	    alchemistTree.addSkill(skill2_6);
+	    alchemistTree.addSkill(skill2_7);
+	    alchemistTree.addSkill(skill3_1);
+	    alchemistTree.addSkill(skill3_2);
+	    alchemistTree.addSkill(skill3_3);
+	    alchemistTree.addSkill(skill3_4);
+	    alchemistTree.addSkill(skill3_5);
+	    alchemistTree.addSkill(skill3_6);
+	    alchemistTree.addSkill(skill3_7);
+	    alchemistTree.addSkill(skill4_1);
+	    alchemistTree.addSkill(skill4_2);
+	    alchemistTree.addSkill(skill4_3);
+	    alchemistTree.addSkill(skill4_4);
+	    alchemistTree.addSkill(skill4_5);
+	    alchemistTree.addSkill(skill4_6);
+	    alchemistTree.addSkill(skill4_7);
+	    alchemistTree.addSkill(skill4_8);
+	    alchemistTree.addSkill(skill4_9);
+	    alchemistTree.addSkill(skill5_1);
+	    alchemistTree.addSkill(skill5_2);
+	    alchemistTree.addSkill(skill5_3);
+	    alchemistTree.addSkill(skill5_4);
+	    alchemistTree.addSkill(skill5_5);
 
 	    // Add the Alchemist skill tree to the skillTrees HashMap
 	    skilltrees.put("alchemist", alchemistTree);
@@ -186,7 +327,6 @@ public class Main extends JavaPlugin {
 	    // Create the skills for the Rogue class
 	    //Tier 0 skills
 	    Skill skill0_1 = new Skill("Swift Feet", "Grants you extra speed", tier0XP, slot0_1);
-	    skill0_1.setUnlocked();
 	    
 	    //Tier 1 skills
 	    Skill skill1_3 = new Skill("Quick Leap", "Launches you forwards", tier1XP,slot1_3);

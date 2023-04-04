@@ -19,6 +19,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
@@ -46,23 +47,33 @@ public class AbilityList implements Listener {
 
     public void initializeAbilities() {
     	
+    	/*
+    	 * SHOP ABILITIES
+    	 */
     	//FIREBALL
-        Ability fireball = new Ability(false, 1, 15, 3);
+        Ability fireball = new Ability(3, 15);
         fireball.setItem(Material.BLAZE_ROD, "Fireball", ChatColor.GOLD, "Right-Click to launch a fireball at your foes.", ChatColor.YELLOW);       
         fireball.shopItem().addLore("Costs $" + fireball.getShopCost(), ChatColor.GREEN);        
         abilities.put("fireball", fireball);
         
         //HEAL POOL
-        Ability healpool = new Ability(false, 1, 30, 2);
+        Ability healpool = new Ability(8, 30);
         healpool.setItem(Material.RED_DYE, "Heal Pool", ChatColor.RED, "Right-Click to create a small area of healing.", ChatColor.GOLD);
         healpool.shopItem().addLore("Costs $" + healpool.getShopCost(), ChatColor.GREEN);
         abilities.put("healpool", healpool);
         
         //REPULSION
-        Ability repulsion = new Ability(false, 2, 20, 5);
+        Ability repulsion = new Ability(10, 10);
         repulsion.setItem(Material.BLUE_DYE, "Repulsion", ChatColor.DARK_AQUA, "Right-Click to unleash a burst of repulsion.", ChatColor.AQUA);
         repulsion.shopItem().addLore("Costs $" + repulsion.getShopCost(), ChatColor.GREEN);
         abilities.put("repulsion", repulsion);
+        
+        /*
+         * CLASS ABILITIES
+         */
+        Ability questionablepotion = new Ability(10, 10);
+        questionablepotion.setItem(Material.POTION, "Questionable Potion", ChatColor.DARK_PURPLE, "Surely drinking this is a good idea.", ChatColor.LIGHT_PURPLE);
+        abilities.put("questionablepotion", questionablepotion);
         
     }
     
@@ -150,6 +161,19 @@ public class AbilityList implements Listener {
                 }, 1L);
             }
         }
+    }
+    
+    @EventHandler
+    public void onPotionDrink(PlayerItemConsumeEvent e) {
+    	Player p = e.getPlayer();
+    	if(e.getItem().isSimilar(abilities.get("questionablepotion").getItem())) {
+    		e.setCancelled(true);
+    		p.setFoodLevel(0);
+    		p.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 16 * 20, 1));
+    		p.getLocation().getWorld().spawnParticle(Particle.CRIT_MAGIC, p.getLocation(), 200, 1, 1, 1, 5.0);
+    		//Sound
+            p.getLocation().getWorld().playSound(p.getLocation(), Sound.ENTITY_ELDER_GUARDIAN_CURSE, 1.0f, 1.0f);
+    	}
     }
     
 }

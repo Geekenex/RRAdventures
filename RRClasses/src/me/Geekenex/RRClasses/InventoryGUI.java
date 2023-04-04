@@ -212,12 +212,21 @@ public class InventoryGUI implements Listener {
 		int skillLevels = s.getRequiredXPLevel();
 		if(p.getLevel() >= skillLevels) {
 			Set<Skill> playerSkills = Main.skills.get(p.getUniqueId());
+			Set<Ability> playerAbilities = Main.abilities.get(p.getUniqueId());
 	        if (playerSkills == null) {
 	        	playerSkills = new HashSet<>();
 	            Main.skills.put(p.getUniqueId(), playerSkills);
 	        }
+	        if (playerAbilities == null) {
+	            playerAbilities = new HashSet<>();
+	            Main.abilities.put(p.getUniqueId(), playerAbilities);
+	        }
 	        if(s.getPrerequisite() == null || playerSkills.contains(s.getPrerequisite())) {
 	        playerSkills.add(s);
+	        if(s.isAbility()) {
+	        	playerAbilities.add(s.getAbility());
+	        }
+	        //Main.abilities.get(p.getUniqueId()).add(s.getAbility());
 	        s.setUnlocked();
 			p.giveExpLevels(-skillLevels);
 			p.playSound(p, Sound.BLOCK_NOTE_BLOCK_HARP, 1, 1);
