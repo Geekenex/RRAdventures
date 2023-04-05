@@ -117,30 +117,53 @@ public class InventoryGUI implements Listener {
 	}
 	
 
-    public void openSkillTree(Player p) {
-        PlayerClass playerClass = Main.classtype.get(p.getUniqueId());
+	public void openSkillTree(Player p) {
+	    PlayerClass playerClass = Main.classtype.get(p.getUniqueId());
+
+	    SkillTree playerSkillTree = Main.skilltrees.get(playerClass.getClassName());
+
+	    // Create a new inventory for the skill tree GUI
+	    Inventory skillTreeGui = Bukkit.createInventory(p, 54,"Skill Tree");
+
+	    
+	    CustomItem skillglass = new CustomItem(Material.GRAY_STAINED_GLASS_PANE, "", ChatColor.BLACK, "", ChatColor.BLACK);
+	    CustomItem glass = new CustomItem(Material.BLACK_STAINED_GLASS_PANE, "", ChatColor.BLACK, "", ChatColor.BLACK);
         
-        SkillTree playerSkillTree = Main.skilltrees.get(playerClass.getClassName());
+	    // Loop through the skills in the player's skill tree and create ItemStacks for them
+	    for (Skill skill : playerSkillTree.getAllSkills()) {
+	        Set<Skill> playerSkills = Main.skills.get(p.getUniqueId());
 
-        // Create a new inventory for the skill tree GUI
-        Inventory skillTreeGui = Bukkit.createInventory(p, 54,"Skill Tree");
+	        if (playerSkills == null) {
+	            if (skill.getPrerequisite() == null) {
+	                skill.createItem(false);
+	            } else {
+	                skillTreeGui.setItem(skill.getGuiSlot(), skillglass.getItem());
+	                continue;
+	            }
+	        } else {
+	            if (playerSkills.contains(skill)) {
+	                skill.createItem(true);
+	            } else if (skill.getPrerequisite() == null || playerSkills.contains(skill.getPrerequisite())) {
+	                skill.createItem(false);
+	            } else {
+	                skillTreeGui.setItem(skill.getGuiSlot(), skillglass.getItem());
+	                continue;
+	            }
+	        }
 
-        // Loop through the skills in the player's skill tree and create ItemStacks for them
-        for (Skill skill : playerSkillTree.getAllSkills()) {
-        	Set<Skill> playerSkills = Main.skills.get(p.getUniqueId());
-        	if(playerSkills == null || !(playerSkills.contains(skill))) {
-        		skill.createItem(false);
-        	} else {
-        		skill.createItem(true);
-        	}
-        	
-            // Add the skill item to the skill tree GUI at the appropriate position based on its tier
-            skillTreeGui.setItem(skill.getGuiSlot(), skill.getCustomItem().getItem());
-        }
-
-        // Open the skill tree GUI for the player
-        p.openInventory(skillTreeGui);
-    }
+	        // Add the skill item to the skill tree GUI at the appropriate position based on its tier
+	        skillTreeGui.setItem(skill.getGuiSlot(), skill.getCustomItem().getItem());
+	    }
+	    
+	    // Fill the remaining slots with gray glass panes
+	    for (int i = 0; i < skillTreeGui.getSize(); i++) {
+	        if (skillTreeGui.getItem(i) == null) {
+	            skillTreeGui.setItem(i, glass.getItem());
+	        }
+	    }
+	    // Open the skill tree GUI for the player
+	    p.openInventory(skillTreeGui);
+	}
 
 	
 	//Returns amount of emeralds in player's inventory

@@ -2,6 +2,7 @@ package me.Geekenex.RRClasses.Abilities;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -10,9 +11,11 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.entity.AreaEffectCloud;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Fireball;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -71,10 +74,15 @@ public class AbilityList implements Listener {
         /*
          * CLASS ABILITIES
          */
-        Ability questionablepotion = new Ability(10, 10);
+        //QUESTIONABLE POTION
+        Ability questionablepotion = new Ability(0, 10);
         questionablepotion.setItem(Material.POTION, "Questionable Potion", ChatColor.DARK_PURPLE, "Surely drinking this is a good idea.", ChatColor.LIGHT_PURPLE);
         abilities.put("questionablepotion", questionablepotion);
         
+        //FLAME CONCOCTION
+        Ability flameconcoction = new Ability(0, 70);
+        flameconcoction.setItem(Material.BLAZE_POWDER, "Flame Concoction", ChatColor.GOLD, "This flame experiment causes devastating damage.", ChatColor.YELLOW);
+        abilities.put("flameconcoction", flameconcoction);
     }
     
     public Ability getAbility(String identifier) {
@@ -130,7 +138,60 @@ public class AbilityList implements Listener {
 	            //Sound
 	            playerLocation.getWorld().playSound(playerLocation, Sound.ENTITY_CAMEL_DASH, 1.0f, 1.0f);
 	        }
+			
+			//Flame Concoction
+			if (item != null && item.isSimilar(abilities.get("flameconcoction").getItem())) {
+			// Launch the blaze powder
+            Location location = p.getEyeLocation();
+            Vector direction = location.getDirection().normalize().multiply(1.5);
+            Item droppedItem = p.getWorld().dropItem(location, new ItemStack(Material.BLAZE_POWDER));
+            droppedItem.setVelocity(direction);
+            droppedItem.setPickupDelay(Integer.MAX_VALUE);
+            final double RANGE = 5.0; // The range of the area of effect
+            final int FIRE_TICKS = 100; // The number of ticks the target should be on fire
+            // Schedule the blaze powder to create an area of effect and then remove itself
+            AtomicInteger taskId = new AtomicInteger(); // Use AtomicInteger to store the task ID
+            int delay = 20;
+            int interval = 20;
+
+            taskId.set(Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+                int count = 0; // Keep track of the number of times the task has run
+
+                @Override
+                public void run() {
+                    Location groundLocation = droppedItem.getLocation();
+
+                    // Create flame particles around the blaze powder
+                    p.getWorld().spawnParticle(Particle.FLAME, groundLocation, 100, 1, 1, 1);
+
+                    // Play a cool sound
+                    p.getWorld().playSound(groundLocation, Sound.ENTITY_BLAZE_SHOOT, SoundCategory.PLAYERS, 1.0f, 1.0f);
+
+                    // Damage and ignite targets in the area of effect
+                    for (Entity entity : droppedItem.getNearbyEntities(RANGE, RANGE, RANGE)) {
+                        if (entity instanceof LivingEntity) {
+                            LivingEntity livingEntity = (LivingEntity) entity;
+                            livingEntity.damage(4, p); // Deal 4 damage
+                            livingEntity.setFireTicks(FIRE_TICKS); // Set the target on fire
+                        }
+                    }
+
+                    // Increment the count and check if the task should stop
+                    count++;
+                    if (count >= 4) { // 4 times longer
+                        Bukkit.getScheduler().cancelTask(taskId.get());
+                        // Remove the blaze powder item
+                        droppedItem.remove();
+                    }
+                }
+            }, delay, interval));
 	    }
+			
+			
+			
+			
+			
+		}
     }
     
 

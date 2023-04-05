@@ -177,11 +177,11 @@ public class Main extends JavaPlugin {
 		skill1_1.addPrerequisite(skill1_2);
 		Skill skill1_4 = new Skill("Resilience","+1 Heart",tier1XP, slot1_4);
 		skill1_4.addPrerequisite(skill1_3);
-		Skill skill1_5 = new Skill("Skill Increase","Stronger class passive buff",tier1XP, slot1_5);
+		Skill skill1_5 = new Skill("Skill Increase","Your attacks deal more fire damage for longer",tier1XP, slot1_5);
 		skill1_5.addPrerequisite(skill1_4);
 
 		//Tier 2 skills
-		Skill skill2_4 = new Skill("Potion Knowledge", "Attacking now inflicts more effects", tier2XP, slot2_4);
+		Skill skill2_4 = new Skill("Potion Knowledge", "Attacking now inflicts withering", tier2XP, slot2_4);
 	    skill2_4.addPrerequisite(skill1_3);
 	    
 
@@ -195,8 +195,9 @@ public class Main extends JavaPlugin {
 		Skill skill2_6 = new Skill("PlaceholderFOUR","XX",tier2XP, slot2_6);
 		skill2_6.addPrerequisite(skill2_5);
 		
-		Skill skill2_1 = new Skill("Alchemist Offensive Ability","+10% Movement Speed",tier2XP, slot2_1);
+		Skill skill2_1 = new Skill("Flame Concoction","This formula burns enemies in an area to a crisp",tier2XP, slot2_1);
 		skill2_1.addPrerequisite(skill2_2);
+		skill2_1.setAbility(abilityList.getAbility("flameconcoction"));
 		Skill skill2_7 = new Skill("Alchemist Defensive Ability","Stronger class passive buff",tier2XP, slot2_7);
 		skill2_7.addPrerequisite(skill2_6);
 		
@@ -226,9 +227,9 @@ public class Main extends JavaPlugin {
 	    
 
 		Skill skill4_4 = new Skill("placeholder13", "XX", tier4XP, slot4_4);
-	    skill4_4.addPrerequisite(skill4_4);
+	    skill4_4.addPrerequisite(skill4_5);
 	    Skill skill4_6 = new Skill("placeholder14", "XX", tier4XP, slot4_6);
-	    skill4_6.addPrerequisite(skill4_6);
+	    skill4_6.addPrerequisite(skill4_5);
 	    
 		Skill skill4_3 = new Skill("placeholder15", "XX", tier4XP, slot4_3);
 	    skill4_3.addPrerequisite(skill4_4);
@@ -238,12 +239,12 @@ public class Main extends JavaPlugin {
 		Skill skill4_2 = new Skill("placeholder17", "XX", tier4XP, slot4_2);
 	    skill4_2.addPrerequisite(skill4_3);
 	    Skill skill4_8 = new Skill("placeholder18", "XX", tier4XP, slot4_8);
-	    skill4_8.addPrerequisite(skill4_8);
+	    skill4_8.addPrerequisite(skill4_7);
 	    
 		Skill skill4_1 = new Skill("placeholder1722", "XX", tier4XP, slot4_1);
-	    skill4_1.addPrerequisite(skill4_1);
+	    skill4_1.addPrerequisite(skill4_2);
 	    Skill skill4_9 = new Skill("placeholder1228", "XX", tier4XP, slot4_9);
-	    skill4_9.addPrerequisite(skill4_9); 
+	    skill4_9.addPrerequisite(skill4_8); 
 	    
 	    //Tier 5 skills
 		Skill skill5_3 = new Skill("placeholder19", "XX", tier5XP, slot5_3);
