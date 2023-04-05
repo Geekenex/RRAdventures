@@ -21,8 +21,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
@@ -44,6 +47,10 @@ public class AbilityList implements Listener {
 	
     public static Map<String, Ability> abilities = new HashMap<>();
 
+    //Alchemist
+    private Map<Player, Integer> slimyPlayers = new HashMap<>();
+    
+    
     public AbilityList() {
         initializeAbilities();
     }
@@ -83,6 +90,11 @@ public class AbilityList implements Listener {
         Ability flameconcoction = new Ability(0, 70);
         flameconcoction.setItem(Material.BLAZE_POWDER, "Flame Concoction", ChatColor.GOLD, "This flame experiment causes devastating damage.", ChatColor.YELLOW);
         abilities.put("flameconcoction", flameconcoction);
+        
+        //SLIMY COAT
+        Ability slimycoat = new Ability(0, 30);
+        slimycoat.setItem(Material.SLIME_BALL, "Slimy Coat", ChatColor.DARK_GREEN, "Everything in contact with you bounces away", ChatColor.GREEN);
+        abilities.put("slimycoat", slimycoat);
     }
     
     public Ability getAbility(String identifier) {
@@ -187,12 +199,96 @@ public class AbilityList implements Listener {
             }, delay, interval));
 	    }
 			
-			
+		//Slimy Coat
+			if (item != null && item.isSimilar(abilities.get("slimycoat").getItem())) {
+			    // Activate the Slimy Coat ability
+				p.sendMessage(ChatColor.GREEN + "You're now coated in slime! The effect will wear off in 30 seconds.");
+
+	            double bounceStrength = 1.0;
+	            slimyPlayers.put(p, (int)bounceStrength);
+	            bounceStrengths.put(p, bounceStrength);
+
+	            // Schedule task to remove slime coat after 30 seconds
+	            Bukkit.getScheduler().runTaskLater(plugin, () -> {
+	                slimyPlayers.remove(p);
+	                bounceStrengths.remove(p);
+	                p.sendMessage(ChatColor.YELLOW + "The slime effect has worn off.");
+	            }, 50 * 20L);
+			}	
 			
 			
 			
 		}
     }
+    
+
+    @EventHandler
+    public void onEntityCollision(EntityDamageByEntityEvent e) {
+        Entity damaged = e.getEntity();
+        Entity damager = e.getDamager();
+
+        if (damager instanceof Player) {
+            Player player = (Player) damager;
+
+            // Check if the player has Slimy Coat active
+            if (slimyPlayers.containsKey(player)) {
+                Vector direction = damaged.getLocation().subtract(player.getLocation()).toVector().normalize().multiply(2.5);
+                direction.setY(Math.max(direction.getY(), 0.3));
+
+                // Apply the velocity change to the damaged entity
+                damaged.setVelocity(direction);
+            }
+            
+        }
+        if (damaged instanceof Player) {
+            Player player = (Player) damaged;
+
+            // Check if the player has Slimy Coat active
+            if (slimyPlayers.containsKey(player)) {
+                Vector direction = damager.getLocation().subtract(player.getLocation()).toVector().normalize().multiply(2.5);
+                direction.setY(Math.max(direction.getY(), 0.3));
+
+                // Apply the velocity change to the damager entity
+                damager.setVelocity(direction);
+            }
+        }
+    }
+    
+    @SuppressWarnings("deprecation")
+	@EventHandler
+    public void onPlayerMove(PlayerMoveEvent e) {
+        Player player = e.getPlayer();
+
+        // Check if the player has Slimy Coat active and is on the ground
+        if (slimyPlayers.containsKey(player) && player.isOnGround()) {
+            bouncePlayer(player);
+        }
+    }
+    
+    @EventHandler
+    public void onPlayerDamage(EntityDamageEvent e) {
+        if (e.getEntity() instanceof Player) {
+            Player player = (Player) e.getEntity();
+
+            // Check if the player has Slimy Coat active and the damage is from falling
+            if (slimyPlayers.containsKey(player) && e.getCause() == EntityDamageEvent.DamageCause.FALL) {
+                e.setCancelled(true); // Cancel the fall damage
+            }
+        }
+    }
+    
+    private Map<Player, Double> bounceStrengths = new HashMap<>();
+    private void bouncePlayer(Player player) {
+        Vector velocity = player.getVelocity();
+        double bounceStrength = bounceStrengths.getOrDefault(player, 0.6);
+        velocity.setY(bounceStrength);
+
+        Vector direction = player.getLocation().getDirection().normalize().multiply(0.3); // You can adjust the multiplier for more or less acceleration
+        velocity.add(direction);
+
+        player.setVelocity(velocity);
+    }
+    
     
 
     private void spawnRepulsionParticles(Location location) {

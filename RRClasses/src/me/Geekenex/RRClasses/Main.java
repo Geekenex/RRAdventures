@@ -198,8 +198,9 @@ public class Main extends JavaPlugin {
 		Skill skill2_1 = new Skill("Flame Concoction","This formula burns enemies in an area to a crisp",tier2XP, slot2_1);
 		skill2_1.addPrerequisite(skill2_2);
 		skill2_1.setAbility(abilityList.getAbility("flameconcoction"));
-		Skill skill2_7 = new Skill("Alchemist Defensive Ability","Stronger class passive buff",tier2XP, slot2_7);
+		Skill skill2_7 = new Skill("Slimy Coat","Apply this to bounce everything away",tier2XP, slot2_7);
 		skill2_7.addPrerequisite(skill2_6);
+		skill2_7.setAbility(abilityList.getAbility("slimycoat"));
 		
 		//Tier 3 Skills
 		Skill skill3_4 = new Skill("placeholder5", "XX", tier3XP, slot3_4);
