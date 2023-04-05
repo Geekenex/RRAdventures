@@ -4,9 +4,8 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 
-public class DiscipleCD implements Listener {
+public class DiscipleCD  {
 
 	public static HashMap<UUID, Double> dCD;
 	

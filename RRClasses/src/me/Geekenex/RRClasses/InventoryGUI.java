@@ -135,16 +135,16 @@ public class InventoryGUI implements Listener {
 
 	        if (playerSkills == null) {
 	            if (skill.getPrerequisite() == null) {
-	                skill.createItem(false);
+	                skill.createItem(p);
 	            } else {
 	                skillTreeGui.setItem(skill.getGuiSlot(), skillglass.getItem());
 	                continue;
 	            }
 	        } else {
 	            if (playerSkills.contains(skill)) {
-	                skill.createItem(true);
+	                skill.createItem(p);
 	            } else if (skill.getPrerequisite() == null || playerSkills.contains(skill.getPrerequisite())) {
-	                skill.createItem(false);
+	                skill.createItem(p);
 	            } else {
 	                skillTreeGui.setItem(skill.getGuiSlot(), skillglass.getItem());
 	                continue;
@@ -250,7 +250,7 @@ public class InventoryGUI implements Listener {
 	        	playerAbilities.add(s.getAbility());
 	        }
 	        //Main.abilities.get(p.getUniqueId()).add(s.getAbility());
-	        s.setUnlocked();
+	        s.setUnlocked(p.getUniqueId());
 			p.giveExpLevels(-skillLevels);
 			p.playSound(p, Sound.BLOCK_NOTE_BLOCK_HARP, 1, 1);
 		} else {

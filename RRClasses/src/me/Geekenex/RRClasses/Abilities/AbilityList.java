@@ -61,7 +61,7 @@ public class AbilityList implements Listener {
     	 * SHOP ABILITIES
     	 */
     	//FIREBALL
-        Ability fireball = new Ability(3, 15);
+        Ability fireball = new Ability(3, 12);
         fireball.setItem(Material.BLAZE_ROD, "Fireball", ChatColor.GOLD, "Right-Click to launch a fireball at your foes.", ChatColor.YELLOW);       
         fireball.shopItem().addLore("Costs $" + fireball.getShopCost(), ChatColor.GREEN);        
         abilities.put("fireball", fireball);
@@ -82,12 +82,12 @@ public class AbilityList implements Listener {
          * CLASS ABILITIES
          */
         //QUESTIONABLE POTION
-        Ability questionablepotion = new Ability(0, 10);
+        Ability questionablepotion = new Ability(0, 35);
         questionablepotion.setItem(Material.POTION, "Questionable Potion", ChatColor.DARK_PURPLE, "Surely drinking this is a good idea.", ChatColor.LIGHT_PURPLE);
         abilities.put("questionablepotion", questionablepotion);
         
         //FLAME CONCOCTION
-        Ability flameconcoction = new Ability(0, 70);
+        Ability flameconcoction = new Ability(0, 40);
         flameconcoction.setItem(Material.BLAZE_POWDER, "Flame Concoction", ChatColor.GOLD, "This flame experiment causes devastating damage.", ChatColor.YELLOW);
         abilities.put("flameconcoction", flameconcoction);
         
@@ -111,7 +111,9 @@ public class AbilityList implements Listener {
 		if(e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 			
 			//Fireball
-			if(item != null && item.isSimilar(abilities.get("fireball").getItem())) {
+			Ability fb = abilities.get("fireball");
+			if(item != null && item.isSimilar(fb.getItem())) {
+				if(fb.checkCooldown(p)) {
 				// Spawn a fireball with no block damage
                 Fireball fireball = p.launchProjectile(Fireball.class);
                 fireball.setIsIncendiary(false);
@@ -122,10 +124,17 @@ public class AbilityList implements Listener {
                 fireball.setVelocity(direction);
                 //Sound
 	            playerLocation.getWorld().playSound(playerLocation, Sound.ENTITY_BLAZE_SHOOT, 1.0f, 1.0f);
+	            
+	            fb.setCooldown(p, fb.getCooldownValue());
+				} else {
+					p.sendMessage(fb.cooldownMessage(p));
+				}
 			}
 			
 			//Heal pool
-			if(item != null && item.isSimilar(abilities.get("healpool").getItem())) {
+			Ability hp = abilities.get("healpool");
+			if(item != null && item.isSimilar(hp.getItem())) {
+				if(hp.checkCooldown(p)) {
 	            // Create an AreaEffectCloud entity
 	            AreaEffectCloud cloud = p.getWorld().spawn(p.getLocation(), AreaEffectCloud.class);
 	            cloud.setRadius(3.0f); // Set the radius of the area
@@ -139,20 +148,34 @@ public class AbilityList implements Listener {
 	            cloud.addCustomEffect(healEffect, true); // Add the potion effect to the cloud
 	            //Sound
 	            playerLocation.getWorld().playSound(playerLocation, Sound.ENTITY_PLAYER_BREATH, 1.0f, 1.0f);
+	            
+	            hp.setCooldown(p, hp.getCooldownValue());
+	        } else {
+	        	p.sendMessage(hp.cooldownMessage(p));
 	        }
+			}
 			
+			Ability repulsion = abilities.get("repulsion");
 			//Repulsion
-			if (item != null && item.isSimilar(abilities.get("repulsion").getItem())) {
+			if (item != null && item.isSimilar(repulsion.getItem())) {
+				if(repulsion.checkCooldown(p)) {
 	            spawnRepulsionParticles(playerLocation);
 
 	            double knockbackStrength = 2.0;
 	            applyKnockbackToNearbyMobs(playerLocation, knockbackStrength, plugin);
 	            //Sound
 	            playerLocation.getWorld().playSound(playerLocation, Sound.ENTITY_CAMEL_DASH, 1.0f, 1.0f);
+	            
+	            repulsion.setCooldown(p, repulsion.getCooldownValue());
+	        } else {
+	        	p.sendMessage(repulsion.cooldownMessage(p));
 	        }
+			}
 			
 			//Flame Concoction
-			if (item != null && item.isSimilar(abilities.get("flameconcoction").getItem())) {
+			Ability fc = abilities.get("flameconcoction");
+			if (item != null && item.isSimilar(fc.getItem())) {
+				if(fc.checkCooldown(p)) {
 			// Launch the blaze powder
             Location location = p.getEyeLocation();
             Vector direction = location.getDirection().normalize().multiply(1.5);
@@ -197,10 +220,17 @@ public class AbilityList implements Listener {
                     }
                 }
             }, delay, interval));
+            
+            fc.setCooldown(p, fc.getCooldownValue());
+	    } else {
+	    	p.sendMessage(fc.cooldownMessage(p));
 	    }
+			}
 			
 		//Slimy Coat
-			if (item != null && item.isSimilar(abilities.get("slimycoat").getItem())) {
+			Ability sc = abilities.get("slimycoat");
+			if (item != null && item.isSimilar(sc.getItem())) {
+				if(sc.checkCooldown(p)) {
 			    // Activate the Slimy Coat ability
 				p.sendMessage(ChatColor.GREEN + "You're now coated in slime! The effect will wear off in 30 seconds.");
 
@@ -214,8 +244,12 @@ public class AbilityList implements Listener {
 	                bounceStrengths.remove(p);
 	                p.sendMessage(ChatColor.YELLOW + "The slime effect has worn off.");
 	            }, 50 * 20L);
+	            
+	            sc.setCooldown(p, sc.getCooldownValue());
+			} else {
+				p.sendMessage(sc.cooldownMessage(p));
 			}	
-			
+			}
 			
 			
 		}
@@ -323,13 +357,20 @@ public class AbilityList implements Listener {
     @EventHandler
     public void onPotionDrink(PlayerItemConsumeEvent e) {
     	Player p = e.getPlayer();
-    	if(e.getItem().isSimilar(abilities.get("questionablepotion").getItem())) {
+    	Ability qp = abilities.get("questionablepotion");
+    	if(e.getItem().isSimilar(qp.getItem())) {
     		e.setCancelled(true);
+    		if(qp.checkCooldown(p)) {
     		p.setFoodLevel(0);
     		p.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 16 * 20, 1));
     		p.getLocation().getWorld().spawnParticle(Particle.CRIT_MAGIC, p.getLocation(), 200, 1, 1, 1, 5.0);
     		//Sound
             p.getLocation().getWorld().playSound(p.getLocation(), Sound.ENTITY_ELDER_GUARDIAN_CURSE, 1.0f, 1.0f);
+            
+            qp.setCooldown(p, qp.getCooldownValue());
+    	} else {
+    		p.sendMessage(qp.cooldownMessage(p));
+    	}
     	}
     }
     

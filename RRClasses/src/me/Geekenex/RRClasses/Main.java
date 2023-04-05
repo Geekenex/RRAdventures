@@ -308,7 +308,6 @@ public class Main extends JavaPlugin {
 	    // Create the skills for the Tank class
 	    //Tier 0 skills
 	    Skill skill0_1 = new Skill("Hearty", "Grants you extra health", tier0XP, slot0_1);
-	    skill0_1.setUnlocked();
 	    
 	    //Tier 1 skills
 	    Skill skill1_3 = new Skill("Hefty Bash", "Give foes a big tackle", tier1XP,slot1_3);

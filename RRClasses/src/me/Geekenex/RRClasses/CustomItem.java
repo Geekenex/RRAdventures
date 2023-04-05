@@ -44,4 +44,8 @@ public class CustomItem implements Serializable {
 	    abilityMeta.setLore(loreList);
 	    item.setItemMeta(abilityMeta);
 	}
+	
+	public void clearLore() {
+		loreList.clear();
+	}
 }
