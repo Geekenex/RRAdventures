@@ -11,10 +11,12 @@ import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Player;
 
 import me.Geekenex.RRClasses.CustomItem;
+import me.Geekenex.RRClasses.Main;
 import me.Geekenex.RRClasses.Abilities.Ability;
 
 public class Skill implements Serializable {
 	
+	private Main plugin;
 
 	private static final long serialVersionUID = 1L;
 	private String name;
@@ -27,11 +29,12 @@ public class Skill implements Serializable {
     private Ability ability;
     private HashMap<UUID, Boolean> playerUnlockStatus = new HashMap<>();
     
-    public Skill(String name, String description, int requiredXP, int guiSlot) {
+    public Skill(String name, String description, int requiredXP, int guiSlot, Main plugin) {
         this.name = name;
         this.description = description;
         this.requiredXPLevel = requiredXP;
         this.guiSlot = guiSlot;
+        this.plugin = plugin;
         item = new CustomItem(Material.PAPER, name, ChatColor.GREEN, description, ChatColor.GRAY);
     }
 
@@ -113,10 +116,31 @@ public class Skill implements Serializable {
     public void applyEffect(Player player) {
     	//Attributes
     	AttributeInstance speed = player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
-        //Speed buffs
+    	AttributeInstance health = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+    	AttributeInstance knockbackresistance = player.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE);
+    	AttributeInstance damage = player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE);
+    	AttributeInstance attackspeed = player.getAttribute(Attribute.GENERIC_ATTACK_SPEED);
+    	AttributeInstance armor = player.getAttribute(Attribute.GENERIC_ARMOR);
+    	AttributeInstance armortoughness = player.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS);
+        
+    	double defaultSpeed = plugin.getConfig().getDouble("default_speed");
+    	double defaultHealth = plugin.getConfig().getDouble("default_health");
+    	double defaultKnockbackResistance = plugin.getConfig().getDouble("default_knockbackresistance");
+    	double defaultDamage = plugin.getConfig().getDouble("default_damage");
+    	double defaultAttackSpeed = plugin.getConfig().getDouble("default_attackspeed");
+    	double defaultArmor = plugin.getConfig().getDouble("default_armor");
+    	double defaultArmorToughness = plugin.getConfig().getDouble("default_armortoughness");
+        //Tier 1 buffs
         if (this.name.equals("Quicker Feet")) {
-            speed.setBaseValue(0.11);
+            speed.setBaseValue(defaultSpeed * 1.1);
         }
+        if (this.name.equals("Heavier Hits")) {
+            damage.setBaseValue(defaultDamage + 2);
+        }
+        if (this.name.equals("Resilience")) {
+            health.setBaseValue(defaultHealth + 2);
+        }
+        
         // Add other skills' effects here
     }
     

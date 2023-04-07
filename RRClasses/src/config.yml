@@ -1,1 +1,8 @@
 plugin_prefix: '&5RR Adventures &r&d> '
+default_health: 12.0
+default_damage: 2.0
+default_speed: 0.1
+default_attackspeed: 4.0
+default_knockbackresistance: 0.0
+default_armor: 0.0
+default_armortoughness: 0.0

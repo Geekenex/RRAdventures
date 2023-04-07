@@ -25,20 +25,31 @@ public class AdminCommands implements CommandExecutor {
         if (label.equalsIgnoreCase("resetattributes")) {
             Player player = (Player) sender;
             
-            for (Attribute attribute : Attribute.values()) {
-                AttributeInstance attributeInstance = player.getAttribute(attribute);
-                
-                if (attributeInstance != null) {
-                    if (attribute == Attribute.GENERIC_MOVEMENT_SPEED) {
-                        attributeInstance.setBaseValue(0.1);
-                        sender.sendMessage("Attribute " + attributeInstance.getAttribute().name() + " set to " + attributeInstance.getBaseValue());
-                    } else {
-                        attributeInstance.setBaseValue(attributeInstance.getDefaultValue());
-                        sender.sendMessage("Attribute " + attributeInstance.getAttribute().name() + " set to " + attributeInstance.getDefaultValue());
-                    }
-                }
-            }
-            
+            double defaultSpeed = plugin.getConfig().getDouble("default_speed");
+        	double defaultHealth = plugin.getConfig().getDouble("default_health");
+        	double defaultKnockbackResistance = plugin.getConfig().getDouble("default_knockbackresistance");
+        	double defaultDamage = plugin.getConfig().getDouble("default_damage");
+        	double defaultAttackSpeed = plugin.getConfig().getDouble("default_attackspeed");
+        	double defaultArmor = plugin.getConfig().getDouble("default_armor");
+        	double defaultArmorToughness = plugin.getConfig().getDouble("default_armortoughness");
+        	
+        	AttributeInstance speed = player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
+        	AttributeInstance health = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+        	AttributeInstance knockbackresistance = player.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE);
+        	AttributeInstance damage = player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE);
+        	AttributeInstance attackspeed = player.getAttribute(Attribute.GENERIC_ATTACK_SPEED);
+        	AttributeInstance armor = player.getAttribute(Attribute.GENERIC_ARMOR);
+        	AttributeInstance armortoughness = player.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS);
+        	
+        	speed.setBaseValue(defaultSpeed);
+        	health.setBaseValue(defaultHealth);
+        	knockbackresistance.setBaseValue(defaultKnockbackResistance);
+        	damage.setBaseValue(defaultDamage);
+        	attackspeed.setBaseValue(defaultAttackSpeed);
+        	armor.setBaseValue(defaultArmor);
+        	armortoughness.setBaseValue(defaultArmorToughness);
+        	
+        	
             player.sendMessage("All attributes have been reset to their default values.");
             return true;
         }

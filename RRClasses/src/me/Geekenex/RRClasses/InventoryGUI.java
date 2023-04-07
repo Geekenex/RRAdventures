@@ -342,10 +342,8 @@ public class InventoryGUI implements Listener {
                     		attributeName = "";
                     		
                     	}
-                        if (attribute == Attribute.GENERIC_MOVEMENT_SPEED) {
-                            p.sendMessage(ChatColor.GOLD + attributeName + ": " + ChatColor.YELLOW + attributeInstance.getBaseValue());
-                        } else if(!(attribute == Attribute.GENERIC_LUCK)) {
-                            p.sendMessage(ChatColor.GOLD + attributeName + ": " + ChatColor.YELLOW + attributeInstance.getDefaultValue());
+                        if(!(attribute == Attribute.GENERIC_LUCK)) {
+                            p.sendMessage(ChatColor.GOLD + attributeName + ": " + ChatColor.YELLOW + (Math.round(attributeInstance.getBaseValue() * 100.0) / 100.0));
                         }
                     }
                 }
