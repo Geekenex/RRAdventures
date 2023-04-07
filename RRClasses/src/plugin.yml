@@ -16,3 +16,4 @@ commands:
   clearlevels:
   class:
   skilltokens:
+  resetattributes:

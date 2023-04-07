@@ -6,6 +6,8 @@ import java.util.UUID;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Player;
 
 import me.Geekenex.RRClasses.CustomItem;
@@ -107,4 +109,15 @@ public class Skill implements Serializable {
 		else
 			return null;
 	}
+	
+    public void applyEffect(Player player) {
+    	//Attributes
+    	AttributeInstance speed = player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
+        //Speed buffs
+        if (this.name.equals("Quicker Feet")) {
+            speed.setBaseValue(0.11);
+        }
+        // Add other skills' effects here
+    }
+    
 }

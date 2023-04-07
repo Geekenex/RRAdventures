@@ -249,8 +249,9 @@ public class InventoryGUI implements Listener {
 	        if(s.isAbility()) {
 	        	playerAbilities.add(s.getAbility());
 	        }
-	        //Main.abilities.get(p.getUniqueId()).add(s.getAbility());
+	        
 	        s.setUnlocked(p.getUniqueId());
+	        s.applyEffect(p);
 			p.giveExpLevels(-skillLevels);
 			p.playSound(p, Sound.BLOCK_NOTE_BLOCK_HARP, 1, 1);
 		} else {
@@ -288,7 +289,9 @@ public class InventoryGUI implements Listener {
 	public void playerClickAbilityGUI(InventoryClickEvent e) {
 		Player p = (Player) e.getWhoClicked();
 		ItemStack clickedItem = e.getCurrentItem();
-		
+        Set<Ability> playerAbilities = Main.abilities.get(p.getUniqueId());
+        Set<Skill> playerSkills = Main.skills.get(p.getUniqueId());
+        
 		if(isAbilityItem(clickedItem))
 			e.setCancelled(true);
 		
@@ -306,7 +309,15 @@ public class InventoryGUI implements Listener {
         //Player interacts with the shop items
         if(e.getView().getTitle().equalsIgnoreCase("shop")) {
         	e.setCancelled(true);
-        	
+        	if(playerAbilities != null) {
+        		for (Ability ability : playerAbilities) {
+					if(ability.getShopItem().isSimilar(clickedItem)) {
+						p.sendMessage(ChatColor.YELLOW + "You already own this ability!");
+						p.playSound(p, Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
+						return;
+					}
+				}
+        	}
         	//SHOP ABILITIES
         	//Fireball
         	Ability fb = abilities.getAbility("fireball");
@@ -334,6 +345,11 @@ public class InventoryGUI implements Listener {
             // Check if the clicked item is a skill from the skill tree
             for (Skill skill : Main.skilltrees.get(Main.classtype.get(p.getUniqueId()).getClassName()).getAllSkills()) {
                 if (skill.getCustomItem().getItem().isSimilar(clickedItem)) {
+                	if(playerSkills != null && playerSkills.contains(skill)) {
+                		p.sendMessage(ChatColor.YELLOW + "You have already unlocked this skill!");
+                		p.playSound(p, Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
+                		return;
+                	}
                     // Purchase the skill
                     purchaseSkill(p, skill);
                     openSkillTree(p);
@@ -341,13 +357,11 @@ public class InventoryGUI implements Listener {
                 }
             }
         }
-        
-        
+         
         if (e.getView().getTitle().equalsIgnoreCase("abilities")) {
             e.setCancelled(true);
 
             // Check if the clicked item is one of the player's abilities
-            Set<Ability> playerAbilities = Main.abilities.get(p.getUniqueId());
             Ability clickedAbility = null;
             if (playerAbilities != null) {
                 for (Ability ability : playerAbilities) {

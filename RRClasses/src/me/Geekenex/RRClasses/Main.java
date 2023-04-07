@@ -56,6 +56,7 @@ public class Main extends JavaPlugin {
 		this.getCommand("clearlevels").setExecutor(new ClassCommands(this));
 		this.getCommand("class").setExecutor(new classesGUI(this));
 		this.getCommand("skilltokens").setExecutor(new ClassCommands(this));
+		this.getCommand("resetattributes").setExecutor(new AdminCommands(this));
 		DiscipleCD.setupCooldown();
 		
 		System.out.print("RR Classes is enabled!");
