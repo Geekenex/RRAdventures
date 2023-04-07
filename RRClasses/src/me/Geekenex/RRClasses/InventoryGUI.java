@@ -9,6 +9,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -42,6 +44,8 @@ public class InventoryGUI implements Listener {
 	CustomItem shopGuiItem = new CustomItem(Material.SLIME_BALL, "Shop", ChatColor.DARK_GREEN, "Click to view the shop.", ChatColor.GREEN);
 	CustomItem skillTreeGuiItem = new CustomItem(Material.EXPERIENCE_BOTTLE, "Skill Tree", ChatColor.DARK_AQUA, "Click to view the skill tree.", ChatColor.AQUA);
 	CustomItem abilityGuiItem = new CustomItem(Material.NETHER_STAR, "Ability Menu", ChatColor.DARK_PURPLE, "Click to manage abilities.", ChatColor.LIGHT_PURPLE);
+	CustomItem playerStatsItem = new CustomItem(Material.BOOK, "Player Stats", ChatColor.GOLD, "Click to view your stats.", ChatColor.YELLOW);
+	
 	
 	CustomItem abilitySlot1 = new CustomItem(Material.PAPER, "Ability Slot 1", ChatColor.GRAY, "Slot 1 for an ability.", ChatColor.DARK_GRAY);
 	CustomItem abilitySlot2 = new CustomItem(Material.PAPER, "Ability Slot 2", ChatColor.GRAY, "Slot 2 for an ability.", ChatColor.DARK_GRAY);
@@ -50,10 +54,10 @@ public class InventoryGUI implements Listener {
 	@EventHandler
 	public void playerJoin(PlayerJoinEvent e) {
 		Player p = e.getPlayer();
-		if(p.getInventory().contains(abilityGuiItem.getItem())) return;
 		p.getInventory().setItem(9, shopGuiItem.getItem());
 		p.getInventory().setItem(10, skillTreeGuiItem.getItem());
 		p.getInventory().setItem(11, abilityGuiItem.getItem());
+		p.getInventory().setItem(12, playerStatsItem.getItem());
 		
 		p.getInventory().setItem(6, abilitySlot1.getItem());
 		p.getInventory().setItem(7, abilitySlot2.getItem());
@@ -295,7 +299,7 @@ public class InventoryGUI implements Listener {
 		if(isAbilityItem(clickedItem))
 			e.setCancelled(true);
 		
-        if (clickedItem != null && (clickedItem.isSimilar(shopGuiItem.getItem()) || clickedItem.isSimilar(skillTreeGuiItem.getItem()) || clickedItem.isSimilar(abilityGuiItem.getItem()))) {
+        if (clickedItem != null && (clickedItem.isSimilar(shopGuiItem.getItem()) || clickedItem.isSimilar(skillTreeGuiItem.getItem()) || clickedItem.isSimilar(abilityGuiItem.getItem()) || clickedItem.isSimilar(playerStatsItem.getItem()))) {
         	p.playSound(p, Sound.BLOCK_AMETHYST_BLOCK_BREAK, 1, 1);
         	e.setCancelled(true);
         	//Opens GUI
@@ -305,6 +309,48 @@ public class InventoryGUI implements Listener {
         		shopGUI(p);
         	if(clickedItem.isSimilar(skillTreeGuiItem.getItem()))
         		openSkillTree(p);
+        	if(clickedItem.isSimilar(playerStatsItem.getItem())) {
+        		p.sendMessage(ChatColor.YELLOW + "---------------");
+                for (Attribute attribute : Attribute.values()) {
+                    AttributeInstance attributeInstance = p.getAttribute(attribute);
+                    
+                    if (attributeInstance != null) {
+                    	String attributeName;
+                    	switch(attribute) {
+                    	case GENERIC_MOVEMENT_SPEED:
+                    		attributeName = "Movement speed";
+                    		break;
+                    	case GENERIC_MAX_HEALTH:
+                    		attributeName = "Maximum Health";
+                    		break;
+                    	case GENERIC_KNOCKBACK_RESISTANCE:
+                    		attributeName = "Knockback Resistance";
+                    		break;
+                    	case GENERIC_ATTACK_DAMAGE:
+                    		attributeName = "Attack Damage";
+                    		break;
+                    	case GENERIC_ATTACK_SPEED:
+                    		attributeName = "Attack Speed";
+                    		break;
+                    	case GENERIC_ARMOR:
+                    		attributeName = "Armor";
+                    		break;
+                    	case GENERIC_ARMOR_TOUGHNESS:
+                    		attributeName = "Armor Toughness";
+                    		break;
+                    	default:
+                    		attributeName = "";
+                    		
+                    	}
+                        if (attribute == Attribute.GENERIC_MOVEMENT_SPEED) {
+                            p.sendMessage(ChatColor.GOLD + attributeName + ": " + ChatColor.YELLOW + attributeInstance.getBaseValue());
+                        } else if(!(attribute == Attribute.GENERIC_LUCK)) {
+                            p.sendMessage(ChatColor.GOLD + attributeName + ": " + ChatColor.YELLOW + attributeInstance.getDefaultValue());
+                        }
+                    }
+                }
+                p.sendMessage(ChatColor.YELLOW + "---------------");
+        	}
         }
         //Player interacts with the shop items
         if(e.getView().getTitle().equalsIgnoreCase("shop")) {
@@ -420,7 +466,7 @@ public class InventoryGUI implements Listener {
 		if(i.isSimilar(abilitySlot1.getItem()) || i.isSimilar(abilitySlot2.getItem()) || i.isSimilar(abilitySlot3.getItem())) {
 			e.setCancelled(true);
 		}
-		if((i.isSimilar(shopGuiItem.getItem()) || i.isSimilar(skillTreeGuiItem.getItem()) || i.isSimilar(abilityGuiItem.getItem()))) {
+		if(i.isSimilar(shopGuiItem.getItem()) || i.isSimilar(skillTreeGuiItem.getItem()) || i.isSimilar(abilityGuiItem.getItem()) || i.isSimilar(playerStatsItem.getItem())) {
 			e.setCancelled(true);
 		}
 		if(isAbilityItem(i))
